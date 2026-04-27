@@ -1,0 +1,40 @@
+@startuml
+skinparam classAttributeIconSize 0
+hide methods
+
+class Usuario 
+class Administrador
+class Profesor
+class Alumno
+
+class Asignatura
+
+class Escenario
+class PerfilAgente
+
+class SesionSimulacion
+class Mensaje
+class Resultados
+
+Usuario <|-- Administrador
+Usuario <|-- Profesor
+Usuario <|-- Alumno
+
+Administrador "1" --> "0..*" Usuario : gestiona
+
+Administrador "1" o-- "0..*" Asignatura : gestiona
+Profesor "1" o-- "0..*" Asignatura : gestiona
+Alumno "*" --o "*" Asignatura : matriculado en
+
+Asignatura "1" *-- "0..*" Escenario : contiene
+Profesor "1" --> "0..*" Escenario : diseña
+Escenario "1" *-- "1" PerfilAgente : define
+
+Alumno "1" *-- "0..*" SesionSimulacion : realiza
+SesionSimulacion "*" --> "1" Escenario : se basa en
+SesionSimulacion "1" *-- "1" Resultados : genera
+
+Profesor "1" --> "0..*" Resultados : evalua
+
+SesionSimulacion "1" *-- "0..*" Mensaje : registra
+@enduml
