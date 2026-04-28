@@ -1,5 +1,5 @@
 @startuml
-skinparam actorStyle hollow
+skinparam actorStyle awesome
 left to right direction
 
 actor "Usuario\n(Rol Abstracto)" as User
