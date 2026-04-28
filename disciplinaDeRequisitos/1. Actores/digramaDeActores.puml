@@ -1,0 +1,20 @@
+@startuml
+skinparam actorStyle hollow
+left to right direction
+
+actor "Usuario\n(Rol Abstracto)" as User
+
+actor "Administrador" as Admin
+actor "Profesor" as Prof
+actor "Alumno" as Alum
+
+User <|-- Admin
+User <|-- Prof
+User <|-- Alum
+
+note right of User
+  Todo usuario hereda el acceso 
+  seguro (Autenticación) y el 
+  control de autorizaciones.
+end note
+@enduml
