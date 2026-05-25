@@ -1,0 +1,24 @@
+@startuml
+skinparam stateBackgroundColor #FEFECE
+skinparam stateBorderColor #A80036
+
+state "INITIAL" as INIT
+state "DASHBOARD_ALUMNO" as DASH
+state "SIMULACION_EN_CURSO" as SIM
+state "VISUALIZAR_RESULTADOS" as RESULT
+
+[*] --> INIT
+
+INIT --> DASH : iniciarSesion\n(CU-01)
+
+DASH --> SIM : iniciarSimulacion (CU-26)\nretomarSimulacion (CU-27)
+DASH --> RESULT : consultarResultados\n(CU-30)
+
+SIM --> SIM : enviarMensaje\n(CU-28)
+SIM --> DASH : finalizarSesion (CU-29)\nnavDashboardAlumno (CU-25)
+
+RESULT --> DASH : navDashboardAlumno\n(CU-25)
+
+DASH --> [*] : cerrarSesion\n(CU-02)
+
+@enduml
