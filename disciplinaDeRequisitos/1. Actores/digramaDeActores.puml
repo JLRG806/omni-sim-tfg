@@ -8,6 +8,8 @@ actor "Administrador" as Admin
 actor "Profesor" as Prof
 actor "Alumno" as Alum
 
+actor "Orquestador IA\n<<system>>" as IA
+
 User <|-- Admin
 User <|-- Prof
 User <|-- Alum
@@ -16,5 +18,11 @@ note right of User
   Todo usuario hereda el acceso 
   seguro (Autenticación) y el 
   control de autorizaciones.
+end note
+
+note right of IA
+  Actor secundario que procesa
+  las peticiones de lenguaje
+  natural (n8n + Ollama).
 end note
 @enduml
