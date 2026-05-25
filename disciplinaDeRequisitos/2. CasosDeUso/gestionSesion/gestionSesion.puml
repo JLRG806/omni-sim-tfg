@@ -1,0 +1,17 @@
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+
+actor "Usuario" as User
+
+rectangle "Gestión de Sesión" {
+  usecase "CU-01\nIniciar Sesión" as CU01
+  usecase "CU-02\nCerrar Sesión" as CU02
+  usecase "CU-03\nRecuperar Cuenta" as CU03
+}
+
+User --> CU01
+User --> CU02
+User --> CU03
+
+@enduml
