@@ -1,0 +1,40 @@
+@startuml
+left to right direction
+skinparam actorStyle awesome
+skinparam packageStyle rectangle
+
+actor "Profesor" as Prof
+
+rectangle "Módulo Docente" {
+  usecase "CU-14\nNavegar Dashboard\nDocente" as CU14
+
+  usecase "CU-15\nMatricular Alumno" as CU15
+  usecase "CU-16\nDesmatricular Alumno" as CU16
+  usecase "CU-17\nBuscar Alumno" as CU17
+
+  usecase "CU-18\nCrear Escenario" as CU18
+  usecase "CU-19\nEditar Escenario" as CU19
+  usecase "CU-20\nPublicar Escenario" as CU20
+  usecase "CU-21\nDespublicar Escenario" as CU21
+  usecase "CU-22\nBuscar Escenario" as CU22
+
+  usecase "CU-23\nRevisar Historial\nde Simulaciones" as CU23
+  usecase "CU-24\nEmitir Calificación" as CU24
+}
+
+Prof --> CU14
+Prof --> CU15
+Prof --> CU16
+Prof --> CU17
+Prof --> CU18
+Prof --> CU19
+Prof --> CU20
+Prof --> CU21
+Prof --> CU22
+Prof --> CU23
+Prof --> CU24
+
+CU15 ..> CU17 : <<include>>
+CU24 ..> CU23 : <<include>>
+
+@enduml
