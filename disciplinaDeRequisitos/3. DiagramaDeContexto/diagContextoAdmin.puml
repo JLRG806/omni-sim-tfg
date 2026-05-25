@@ -1,0 +1,23 @@
+@startuml
+skinparam stateBackgroundColor #FEFECE
+skinparam stateBorderColor #A80036
+
+state "INITIAL" as INIT
+state "GESTION_USUARIOS" as USERS
+state "GESTION_ASIGNATURAS" as ASIG
+
+[*] --> INIT
+
+INIT --> USERS : iniciarSesion (CU-01)\nlistarUsuarios (CU-04)
+
+USERS --> USERS : crearUsuario (CU-05)\nmodificarUsuario (CU-06)\neliminarUsuario (CU-07)\nbuscarUsuario (CU-08)
+
+ASIG --> ASIG : crearAsignatura (CU-10)\nmodificarAsignatura (CU-11)\neliminarAsignatura (CU-12)\nbuscarAsignatura (CU-13)
+
+USERS --> ASIG : listarAsignaturas\n(CU-09)
+ASIG --> USERS : listarUsuarios\n(CU-04)
+
+USERS --> [*] : cerrarSesion (CU-02)
+ASIG --> [*] : cerrarSesion (CU-02)
+
+@enduml
