@@ -1,0 +1,28 @@
+@startuml
+left to right direction
+skinparam actorStyle awesome
+skinparam packageStyle rectangle
+
+actor "Alumno" as Alum
+actor "Orquestador IA\n<<system>>" as IA
+
+rectangle "Módulo del Estudiante" {
+  usecase "CU-25\nNavegar Dashboard\nEstudiante" as CU25
+  usecase "CU-26\nIniciar Simulación" as CU26
+  usecase "CU-27\nRetomar Simulación" as CU27
+  usecase "CU-28\nEnviar Mensaje\n(Chat Asíncrono)" as CU28
+  usecase "CU-29\nFinalizar Sesión\nActiva" as CU29
+  usecase "CU-30\nConsultar Resultados\ny Feedback" as CU30
+}
+
+Alum --> CU25
+Alum --> CU26
+Alum --> CU27
+Alum --> CU28
+Alum --> CU29
+Alum --> CU30
+
+CU28 --> IA
+CU29 --> IA
+
+@enduml
