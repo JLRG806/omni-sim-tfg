@@ -1,0 +1,43 @@
+@startuml
+left to right direction
+skinparam actorStyle awesome
+skinparam packageStyle rectangle
+
+actor "Administrador" as Admin
+
+rectangle "Módulo de Administración" {
+  usecase "CU-04\nListar Usuarios" as CU04
+  usecase "CU-05\nCrear Usuario" as CU05
+  usecase "CU-06\nModificar Usuario" as CU06
+  usecase "CU-07\nEliminar Usuario" as CU07
+  usecase "CU-08\nBuscar Usuario" as CU08
+
+  usecase "CU-09\nListar Asignaturas" as CU09
+  usecase "CU-10\nCrear Asignatura" as CU10
+  usecase "CU-11\nModificar Asignatura" as CU11
+  usecase "CU-12\nEliminar Asignatura" as CU12
+  usecase "CU-13\nBuscar Asignatura" as CU13
+}
+
+Admin --> CU04
+Admin --> CU05
+Admin --> CU06
+Admin --> CU07
+Admin --> CU08
+Admin --> CU09
+Admin --> CU10
+Admin --> CU11
+Admin --> CU12
+Admin --> CU13
+
+CU05 ..> CU04 : <<include>>
+CU06 ..> CU04 : <<include>>
+CU07 ..> CU04 : <<include>>
+CU08 ..> CU04 : <<include>>
+
+CU10 ..> CU09 : <<include>>
+CU11 ..> CU09 : <<include>>
+CU12 ..> CU09 : <<include>>
+CU13 ..> CU09 : <<include>>
+
+@enduml
