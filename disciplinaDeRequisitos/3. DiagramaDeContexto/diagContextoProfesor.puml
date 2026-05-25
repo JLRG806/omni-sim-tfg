@@ -1,0 +1,30 @@
+@startuml
+skinparam stateBackgroundColor #FEFECE
+skinparam stateBorderColor #A80036
+
+state "INITIAL" as INIT
+state "DASHBOARD_PROFESOR" as DASH
+state "GESTION_MATRICULAS" as MATR
+state "GESTION_ESCENARIOS" as ESCN
+state "CENTRO_EVALUACIONES" as EVAL
+
+[*] --> INIT
+
+INIT --> DASH : iniciarSesion\n(CU-01)
+
+DASH --> MATR : buscarAlumno\n(CU-17)
+DASH --> ESCN : crearEscenario (CU-18)\nbuscarEscenario (CU-22)
+DASH --> EVAL : revisarHistorial\n(CU-23)
+
+MATR --> MATR : matricularAlumno (CU-15)\ndesmatricularAlumno (CU-16)\nbuscarAlumno (CU-17)
+MATR --> DASH : navDashboardProfesor\n(CU-14)
+
+ESCN --> ESCN : crearEscenario (CU-18)\neditarEscenario (CU-19)\npublicarEscenario (CU-20)\ndespublicarEscenario (CU-21)\nbuscarEscenario (CU-22)
+ESCN --> DASH : navDashboardProfesor\n(CU-14)
+
+EVAL --> EVAL : emitirCalificacion (CU-24)\nrevisarHistorial (CU-23)
+EVAL --> DASH : navDashboardProfesor\n(CU-14)
+
+DASH --> [*] : cerrarSesion\n(CU-02)
+
+@enduml
