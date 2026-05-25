@@ -22,15 +22,15 @@ Usuario <|-- Alumno
 
 Administrador "1" --> "0..*" Usuario : gestiona
 
-Administrador "1" o-- "0..*" Asignatura : gestiona
-Profesor "1" o-- "0..*" Asignatura : gestiona
-Alumno "*" --o "*" Asignatura : matriculado en
+Administrador "1" --> "0..*" Asignatura : gestiona
+Profesor "1" --> "0..*" Asignatura : coordina
+Alumno "*" -- "*" Asignatura : matriculado en
 
 Asignatura "1" *-- "0..*" Escenario : contiene
 Profesor "1" --> "0..*" Escenario : diseña
 Escenario "1" *-- "1" PerfilAgente : define
 
-Alumno "1" *-- "0..*" SesionSimulacion : realiza
+Alumno "1" --> "0..*" SesionSimulacion : realiza
 SesionSimulacion "*" --> "1" Escenario : se basa en
 SesionSimulacion "1" *-- "1" Resultados : genera
 
