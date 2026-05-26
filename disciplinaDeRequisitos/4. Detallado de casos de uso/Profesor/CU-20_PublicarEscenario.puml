@@ -1,0 +1,47 @@
+@startuml CU-20_PublicarEscenario
+skinparam {
+    NoteBackgroundColor #whiteSmoke
+    ArrowColor #green
+    NoteBorderColor #black
+    linetype polyline
+}
+
+skinparam state {
+    BackgroundColor #whiteSmoke
+}
+
+hide empty description
+
+state startState as "GESTION_ESCENARIOS"
+state endState as "GESTION_ESCENARIOS"
+
+startState -down-> PublicarEscenario
+
+state PublicarEscenario {
+    state SeleccionEscenario as " "
+    state ValidarPublicacion <<choice>>
+    state EscenarioPublicado as " "
+
+    SeleccionEscenario --> ValidarPublicacion
+    note on link
+        <b>Profesor solicita</b>
+        * Publicar escenario seleccionado
+    end note
+
+    ValidarPublicacion -[#red]-> SeleccionEscenario
+    note on link
+        <b>Sistema muestra</b>
+        * Error: "El perfil del agente está incompleto"
+    end note
+
+    ValidarPublicacion --> EscenarioPublicado
+    note on link
+        <b>Sistema confirma</b>
+        * Escenario publicado
+        * Visible para los alumnos matriculados
+    end note
+}
+
+PublicarEscenario -down-> endState
+
+@enduml
