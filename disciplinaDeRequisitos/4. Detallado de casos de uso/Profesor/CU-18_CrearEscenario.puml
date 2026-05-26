@@ -1,0 +1,87 @@
+@startuml CU-18_CrearEscenario
+skinparam {
+    NoteBackgroundColor #whiteSmoke
+    ArrowColor #green
+    NoteBorderColor #black
+    linetype polyline
+}
+
+skinparam state {
+    BackgroundColor #whiteSmoke
+}
+
+hide empty description
+
+state startState as "GESTION_ESCENARIOS"
+state endState as "GESTION_ESCENARIOS"
+
+startState -down-> CrearEscenario
+
+state CrearEscenario {
+
+    state "Fase 1: Escenario" as Fase1 {
+        state IngresoEscenario as " "
+        state ValidarEscenario <<choice>>
+        state EscenarioRegistrado as " "
+
+        IngresoEscenario --> ValidarEscenario
+        note on link
+            <b>Profesor introduce</b>
+            * Título
+            * Área de conocimiento
+            * Descripción de la situación
+            * Objetivos de aprendizaje
+        end note
+
+        ValidarEscenario -[#red]-> IngresoEscenario
+        note on link
+            <b>Sistema muestra</b>
+            * Error: "Datos inválidos o título duplicado"
+        end note
+
+        ValidarEscenario --> EscenarioRegistrado
+        note on link
+            <b>Sistema confirma</b>
+            * Escenario registrado
+            * Pasa a configurar perfil
+        end note
+    }
+
+    state "Fase 2: Perfil del Agente" as Fase2 {
+        state IngresoPerfil as " "
+        state ValidarPerfil <<choice>>
+        state PerfilConfigurado as " "
+
+        IngresoPerfil --> ValidarPerfil
+        note on link
+            <b>Profesor configura</b>
+            * Rol / Identidad
+            * Trasfondo del personaje
+            * Conocimientos y experiencia
+            * Información explícita
+            * Información latente
+            * Comportamiento
+            * Nivel de dificultad
+            * Criterios de evaluación
+        end note
+
+        ValidarPerfil -[#red]-> IngresoPerfil
+        note on link
+            <b>Sistema muestra</b>
+            * Error: "Campos obligatorios incompletos"
+        end note
+
+        ValidarPerfil --> PerfilConfigurado
+        note on link
+            <b>Sistema confirma</b>
+            * Perfil del agente configurado
+            * Escenario listo (no publicado)
+        end note
+    }
+
+    Fase1 -down-> Fase2
+}
+
+CrearEscenario -down-> endState
+
+@enduml
