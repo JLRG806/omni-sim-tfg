@@ -1,0 +1,48 @@
+@startuml CU-21_DespublicarEscenario
+skinparam {
+    NoteBackgroundColor #whiteSmoke
+    ArrowColor #green
+    NoteBorderColor #black
+    linetype polyline
+}
+
+skinparam state {
+    BackgroundColor #whiteSmoke
+}
+
+hide empty description
+
+state startState as "GESTION_ESCENARIOS"
+state endState as "GESTION_ESCENARIOS"
+
+startState -down-> DespublicarEscenario
+
+state DespublicarEscenario {
+    state SeleccionEscenario as " "
+    state ConfirmarDespublicacion <<choice>>
+    state EscenarioDespublicado as " "
+
+    SeleccionEscenario --> ConfirmarDespublicacion
+    note on link
+        <b>Profesor solicita</b>
+        * Despublicar escenario seleccionado
+        * Sistema pide confirmación
+    end note
+
+    ConfirmarDespublicacion -[#red]-> [*]
+    note on link
+        <b>Profesor cancela</b>
+        * La despublicación se cancela
+    end note
+
+    ConfirmarDespublicacion --> EscenarioDespublicado
+    note on link
+        <b>Sistema confirma</b>
+        * Escenario despublicado
+        * Ya no es visible para los alumnos
+    end note
+}
+
+DespublicarEscenario -down-> endState
+
+@enduml
