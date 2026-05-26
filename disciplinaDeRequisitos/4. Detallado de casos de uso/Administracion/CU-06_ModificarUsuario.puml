@@ -1,0 +1,55 @@
+@startuml CU-06_ModificarUsuario
+skinparam {
+    NoteBackgroundColor #whiteSmoke
+    ArrowColor #green
+    NoteBorderColor #black
+    linetype polyline
+}
+
+skinparam state {
+    BackgroundColor #whiteSmoke
+}
+
+hide empty description
+
+state startState as "GESTION_USUARIOS"
+state endState as "GESTION_USUARIOS"
+
+startState -down-> ModificarUsuario
+
+state ModificarUsuario {
+    state SeleccionUsuario as " "
+    state EdicionDatos as " "
+    state ValidarDatos <<choice>>
+    state UsuarioModificado as " "
+
+    SeleccionUsuario --> EdicionDatos
+    note on link
+        <b>Administrador selecciona</b>
+        * Usuario a modificar
+    end note
+
+    EdicionDatos --> ValidarDatos
+    note on link
+        <b>Administrador modifica</b>
+        * Nombre, correo, contraseña
+        * Rol, estado
+    end note
+
+    ValidarDatos -[#red]-> EdicionDatos
+    note on link
+        <b>Sistema muestra</b>
+        * Error: "Datos inválidos o correo duplicado"
+    end note
+
+    ValidarDatos --> UsuarioModificado
+    note on link
+        <b>Sistema confirma</b>
+        * Usuario modificado correctamente
+        * Actualiza lista de usuarios
+    end note
+}
+
+ModificarUsuario -down-> endState
+
+@enduml
