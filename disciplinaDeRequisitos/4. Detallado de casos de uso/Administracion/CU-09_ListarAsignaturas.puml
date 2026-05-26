@@ -1,0 +1,47 @@
+@startuml CU-09_ListarAsignaturas
+skinparam {
+    NoteBackgroundColor #whiteSmoke
+    ArrowColor #green
+    NoteBorderColor #black
+    linetype polyline
+}
+
+skinparam state {
+    BackgroundColor #whiteSmoke
+}
+
+hide empty description
+
+state startState as "GESTION_USUARIOS"
+state endState as "GESTION_ASIGNATURAS"
+
+startState -down-> ListarAsignaturas
+
+state ListarAsignaturas {
+    state SolicitudListado as " "
+    state ValidarPermisos <<choice>>
+    state MostrarListado as " "
+
+    SolicitudListado --> ValidarPermisos
+    note on link
+        <b>Administrador solicita</b>
+        * Acceder a gestión de asignaturas
+    end note
+
+    ValidarPermisos -[#red]-> SolicitudListado
+    note on link
+        <b>Sistema muestra</b>
+        * Error: "No tiene permisos para esta acción"
+    end note
+
+    ValidarPermisos --> MostrarListado
+    note on link
+        <b>Sistema muestra</b>
+        * Lista de asignaturas registradas
+        * Nombre, código, profesor asignado
+    end note
+}
+
+ListarAsignaturas -down-> endState
+
+@enduml
