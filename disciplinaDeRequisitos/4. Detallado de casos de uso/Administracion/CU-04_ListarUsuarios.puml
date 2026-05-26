@@ -1,0 +1,47 @@
+@startuml CU-04_ListarUsuarios
+skinparam {
+    NoteBackgroundColor #whiteSmoke
+    ArrowColor #green
+    NoteBorderColor #black
+    linetype polyline
+}
+
+skinparam state {
+    BackgroundColor #whiteSmoke
+}
+
+hide empty description
+
+state startState as "INITIAL"
+state endState as "GESTION_USUARIOS"
+
+startState -down-> ListarUsuarios
+
+state ListarUsuarios {
+    state SolicitudListado as " "
+    state ValidarPermisos <<choice>>
+    state MostrarListado as " "
+
+    SolicitudListado --> ValidarPermisos
+    note on link
+        <b>Administrador solicita</b>
+        * Acceder a gestión de usuarios
+    end note
+
+    ValidarPermisos -[#red]-> SolicitudListado
+    note on link
+        <b>Sistema muestra</b>
+        * Error: "No tiene permisos para esta acción"
+    end note
+
+    ValidarPermisos --> MostrarListado
+    note on link
+        <b>Sistema muestra</b>
+        * Lista de usuarios registrados
+        * Nombre, correo, rol, estado
+    end note
+}
+
+ListarUsuarios -down-> endState
+
+@enduml
