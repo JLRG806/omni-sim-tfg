@@ -1,0 +1,44 @@
+@startuml CU-14_NavDashboardProfesor
+skinparam {
+    NoteBackgroundColor #whiteSmoke
+    ArrowColor #green
+    NoteBorderColor #black
+    linetype polyline
+}
+
+skinparam state {
+    BackgroundColor #whiteSmoke
+}
+
+hide empty description
+
+state startState1 as "GESTION_MATRICULAS"
+state startState2 as "GESTION_ESCENARIOS"
+state startState3 as "CENTRO_EVALUACIONES"
+state endState as "DASHBOARD_PROFESOR"
+
+startState1 -down-> NavDashboardProfesor
+startState2 -down-> NavDashboardProfesor
+startState3 -down-> NavDashboardProfesor
+
+state NavDashboardProfesor {
+    state SolicitudNavegacion as " "
+    state CargarDashboard as " "
+
+    SolicitudNavegacion --> CargarDashboard
+    note on link
+        <b>Profesor solicita</b>
+        * Volver al dashboard principal
+    end note
+
+    CargarDashboard --> [*]
+    note on link
+        <b>Sistema muestra</b>
+        * Lista de asignaturas del profesor
+        * Accesos a matrículas, escenarios, evaluaciones
+    end note
+}
+
+NavDashboardProfesor -down-> endState
+
+@enduml
