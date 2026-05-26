@@ -1,0 +1,48 @@
+@startuml CU-12_EliminarAsignatura
+skinparam {
+    NoteBackgroundColor #whiteSmoke
+    ArrowColor #green
+    NoteBorderColor #black
+    linetype polyline
+}
+
+skinparam state {
+    BackgroundColor #whiteSmoke
+}
+
+hide empty description
+
+state startState as "GESTION_ASIGNATURAS"
+state endState as "GESTION_ASIGNATURAS"
+
+startState -down-> EliminarAsignatura
+
+state EliminarAsignatura {
+    state SeleccionAsignatura as " "
+    state ConfirmarEliminacion <<choice>>
+    state AsignaturaEliminada as " "
+
+    SeleccionAsignatura --> ConfirmarEliminacion
+    note on link
+        <b>Administrador solicita</b>
+        * Eliminar asignatura seleccionada
+        * Sistema pide confirmación
+    end note
+
+    ConfirmarEliminacion -[#red]-> [*]
+    note on link
+        <b>Administrador cancela</b>
+        * La eliminación se cancela
+    end note
+
+    ConfirmarEliminacion --> AsignaturaEliminada
+    note on link
+        <b>Sistema confirma</b>
+        * Asignatura eliminada correctamente
+        * Actualiza lista de asignaturas
+    end note
+}
+
+EliminarAsignatura -down-> endState
+
+@enduml
