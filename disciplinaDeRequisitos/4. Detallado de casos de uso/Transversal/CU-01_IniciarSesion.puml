@@ -1,0 +1,54 @@
+@startuml CU-01_IniciarSesion
+skinparam {
+    NoteBackgroundColor #whiteSmoke
+    ArrowColor #green
+    NoteBorderColor #black
+    linetype polyline
+}
+
+skinparam state {
+    BackgroundColor #whiteSmoke
+}
+
+hide empty description
+
+state startState as "INITIAL"
+state endState as "DASHBOARD"
+
+startState -down-> IniciarSesion
+
+state IniciarSesion {
+    state IngresoCredenciales as " "
+    state ValidarCredenciales <<choice>>
+    state SesionIniciada as " "
+
+    IngresoCredenciales --> ValidarCredenciales
+    note on link
+        <b>Usuario introduce</b>
+        * Correo electrónico
+        * Contraseña
+    end note
+
+    ValidarCredenciales -[#red]-> IngresoCredenciales
+    note on link
+        <b>Sistema muestra</b>
+        * Error: "Credenciales inválidas"
+    end note
+
+    ValidarCredenciales --> SesionIniciada
+    note on link
+        <b>Sistema redirige</b>
+        * Al dashboard según rol
+    end note
+}
+
+IniciarSesion -down-> endState
+
+note right of endState
+  Según rol:
+  Admin → GESTION_USUARIOS
+  Profesor → DASHBOARD_PROFESOR
+  Alumno → DASHBOARD_ALUMNO
+end note
+
+@enduml
