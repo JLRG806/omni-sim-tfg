@@ -1,0 +1,55 @@
+@startuml CU-10_CrearAsignatura
+skinparam {
+    NoteBackgroundColor #whiteSmoke
+    ArrowColor #green
+    NoteBorderColor #black
+    linetype polyline
+}
+
+skinparam state {
+    BackgroundColor #whiteSmoke
+}
+
+hide empty description
+
+state startState as "GESTION_ASIGNATURAS"
+state endState as "GESTION_ASIGNATURAS"
+
+startState -down-> CrearAsignatura
+
+state CrearAsignatura {
+    state SolicitudCreacion as " "
+    state IngresoDatos as " "
+    state ValidarDatos <<choice>>
+    state AsignaturaCreada as " "
+
+    SolicitudCreacion --> IngresoDatos
+    note on link
+        <b>Administrador pulsa</b>
+        * Botón "Crear asignatura"
+    end note
+
+    IngresoDatos --> ValidarDatos
+    note on link
+        <b>Administrador introduce</b>
+        * Nombre, código
+        * Profesor asignado
+    end note
+
+    ValidarDatos -[#red]-> IngresoDatos
+    note on link
+        <b>Sistema muestra</b>
+        * Error: "Datos inválidos o código duplicado"
+    end note
+
+    ValidarDatos --> AsignaturaCreada
+    note on link
+        <b>Sistema confirma</b>
+        * Asignatura creada correctamente
+        * Actualiza lista de asignaturas
+    end note
+}
+
+CrearAsignatura -down-> endState
+
+@enduml
