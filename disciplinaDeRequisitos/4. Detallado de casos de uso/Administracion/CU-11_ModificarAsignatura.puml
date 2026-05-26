@@ -1,0 +1,55 @@
+@startuml CU-11_ModificarAsignatura
+skinparam {
+    NoteBackgroundColor #whiteSmoke
+    ArrowColor #green
+    NoteBorderColor #black
+    linetype polyline
+}
+
+skinparam state {
+    BackgroundColor #whiteSmoke
+}
+
+hide empty description
+
+state startState as "GESTION_ASIGNATURAS"
+state endState as "GESTION_ASIGNATURAS"
+
+startState -down-> ModificarAsignatura
+
+state ModificarAsignatura {
+    state SeleccionAsignatura as " "
+    state EdicionDatos as " "
+    state ValidarDatos <<choice>>
+    state AsignaturaModificada as " "
+
+    SeleccionAsignatura --> EdicionDatos
+    note on link
+        <b>Administrador selecciona</b>
+        * Asignatura a modificar
+    end note
+
+    EdicionDatos --> ValidarDatos
+    note on link
+        <b>Administrador modifica</b>
+        * Nombre, código
+        * Profesor asignado
+    end note
+
+    ValidarDatos -[#red]-> EdicionDatos
+    note on link
+        <b>Sistema muestra</b>
+        * Error: "Datos inválidos o código duplicado"
+    end note
+
+    ValidarDatos --> AsignaturaModificada
+    note on link
+        <b>Sistema confirma</b>
+        * Asignatura modificada correctamente
+        * Actualiza lista de asignaturas
+    end note
+}
+
+ModificarAsignatura -down-> endState
+
+@enduml
