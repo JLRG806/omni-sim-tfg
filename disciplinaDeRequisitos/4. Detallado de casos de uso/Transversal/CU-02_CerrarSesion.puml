@@ -1,0 +1,40 @@
+@startuml CU-02_CerrarSesion
+skinparam {
+    NoteBackgroundColor #whiteSmoke
+    ArrowColor #green
+    NoteBorderColor #black
+    linetype polyline
+}
+
+skinparam state {
+    BackgroundColor #whiteSmoke
+}
+
+hide empty description
+
+state startState as "DASHBOARD"
+state endState as "LOGIN"
+
+startState -down-> CerrarSesion
+
+state CerrarSesion {
+    state SolicitudCierre as " "
+    state InvalidarSesion as " "
+
+    SolicitudCierre --> InvalidarSesion
+    note on link
+        <b>Usuario pulsa</b>
+        * Botón "Cerrar sesión"
+    end note
+
+    InvalidarSesion --> [*]
+    note on link
+        <b>Sistema invalida</b>
+        * Token de sesión
+        * Redirige a pantalla de login
+    end note
+}
+
+CerrarSesion -down-> endState
+
+@enduml
