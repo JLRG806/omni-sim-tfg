@@ -1,0 +1,48 @@
+@startuml CU-07_EliminarUsuario
+skinparam {
+    NoteBackgroundColor #whiteSmoke
+    ArrowColor #green
+    NoteBorderColor #black
+    linetype polyline
+}
+
+skinparam state {
+    BackgroundColor #whiteSmoke
+}
+
+hide empty description
+
+state startState as "GESTION_USUARIOS"
+state endState as "GESTION_USUARIOS"
+
+startState -down-> EliminarUsuario
+
+state EliminarUsuario {
+    state SeleccionUsuario as " "
+    state ConfirmarEliminacion <<choice>>
+    state UsuarioEliminado as " "
+
+    SeleccionUsuario --> ConfirmarEliminacion
+    note on link
+        <b>Administrador solicita</b>
+        * Eliminar usuario seleccionado
+        * Sistema pide confirmación
+    end note
+
+    ConfirmarEliminacion -[#red]-> [*]
+    note on link
+        <b>Administrador cancela</b>
+        * La eliminación se cancela
+    end note
+
+    ConfirmarEliminacion --> UsuarioEliminado
+    note on link
+        <b>Sistema confirma</b>
+        * Usuario eliminado correctamente
+        * Actualiza lista de usuarios
+    end note
+}
+
+EliminarUsuario -down-> endState
+
+@enduml
