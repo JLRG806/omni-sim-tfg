@@ -1,0 +1,47 @@
+@startuml CU-08_BuscarUsuario
+skinparam {
+    NoteBackgroundColor #whiteSmoke
+    ArrowColor #green
+    NoteBorderColor #black
+    linetype polyline
+}
+
+skinparam state {
+    BackgroundColor #whiteSmoke
+}
+
+hide empty description
+
+state startState as "GESTION_USUARIOS"
+state endState as "GESTION_USUARIOS"
+
+startState -down-> BuscarUsuario
+
+state BuscarUsuario {
+    state IngresoTermino as " "
+    state ValidarBusqueda <<choice>>
+    state MostrarResultados as " "
+
+    IngresoTermino --> ValidarBusqueda
+    note on link
+        <b>Administrador introduce</b>
+        * Término de búsqueda
+        * (nombre, correo o rol)
+    end note
+
+    ValidarBusqueda -[#red]-> IngresoTermino
+    note on link
+        <b>Sistema muestra</b>
+        * "No se encontraron resultados"
+    end note
+
+    ValidarBusqueda --> MostrarResultados
+    note on link
+        <b>Sistema muestra</b>
+        * Lista filtrada de usuarios
+    end note
+}
+
+BuscarUsuario -down-> endState
+
+@enduml
