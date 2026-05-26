@@ -1,0 +1,92 @@
+@startuml CU-19_EditarEscenario
+skinparam {
+    NoteBackgroundColor #whiteSmoke
+    ArrowColor #green
+    NoteBorderColor #black
+    linetype polyline
+}
+
+skinparam state {
+    BackgroundColor #whiteSmoke
+}
+
+hide empty description
+
+state startState as "GESTION_ESCENARIOS"
+state endState as "GESTION_ESCENARIOS"
+
+startState -down-> EditarEscenario
+
+state EditarEscenario {
+    state SeleccionEscenario as " "
+
+    SeleccionEscenario --> EdicionDatos
+    note on link
+        <b>Profesor selecciona</b>
+        * Escenario a editar
+    end note
+
+    state "Fase 1: Escenario" as EdicionDatos {
+        state ModificarEscenario as " "
+        state ValidarEscenario <<choice>>
+        state EscenarioActualizado as " "
+
+        ModificarEscenario --> ValidarEscenario
+        note on link
+            <b>Profesor modifica</b>
+            * Título
+            * Área de conocimiento
+            * Descripción de la situación
+            * Objetivos de aprendizaje
+        end note
+
+        ValidarEscenario -[#red]-> ModificarEscenario
+        note on link
+            <b>Sistema muestra</b>
+            * Error: "Datos inválidos o título duplicado"
+        end note
+
+        ValidarEscenario --> EscenarioActualizado
+        note on link
+            <b>Sistema confirma</b>
+            * Datos del escenario actualizados
+        end note
+    }
+
+    state "Fase 2: Perfil del Agente" as EdicionPerfil {
+        state ModificarPerfil as " "
+        state ValidarPerfil <<choice>>
+        state PerfilActualizado as " "
+
+        ModificarPerfil --> ValidarPerfil
+        note on link
+            <b>Profesor modifica</b>
+            * Rol / Identidad
+            * Trasfondo del personaje
+            * Conocimientos y experiencia
+            * Información explícita
+            * Información latente
+            * Comportamiento
+            * Nivel de dificultad
+            * Criterios de evaluación
+        end note
+
+        ValidarPerfil -[#red]-> ModificarPerfil
+        note on link
+            <b>Sistema muestra</b>
+            * Error: "Campos obligatorios incompletos"
+        end note
+
+        ValidarPerfil --> PerfilActualizado
+        note on link
+            <b>Sistema confirma</b>
+            * Perfil del agente actualizado
+        end note
+    }
+
+    EdicionDatos -down-> EdicionPerfil
+}
+
+EditarEscenario -down-> endState
+
+@enduml
