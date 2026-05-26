@@ -1,0 +1,55 @@
+@startuml CU-05_CrearUsuario
+skinparam {
+    NoteBackgroundColor #whiteSmoke
+    ArrowColor #green
+    NoteBorderColor #black
+    linetype polyline
+}
+
+skinparam state {
+    BackgroundColor #whiteSmoke
+}
+
+hide empty description
+
+state startState as "GESTION_USUARIOS"
+state endState as "GESTION_USUARIOS"
+
+startState -down-> CrearUsuario
+
+state CrearUsuario {
+    state SolicitudCreacion as " "
+    state IngresosDatos as " "
+    state ValidarDatos <<choice>>
+    state UsuarioCreado as " "
+
+    SolicitudCreacion --> IngresosDatos
+    note on link
+        <b>Administrador pulsa</b>
+        * Botón "Crear usuario"
+    end note
+
+    IngresosDatos --> ValidarDatos
+    note on link
+        <b>Administrador introduce</b>
+        * Nombre, correo, contraseña
+        * Rol (Administrador, Profesor, Alumno)
+    end note
+
+    ValidarDatos -[#red]-> IngresosDatos
+    note on link
+        <b>Sistema muestra</b>
+        * Error: "Datos inválidos o correo duplicado"
+    end note
+
+    ValidarDatos --> UsuarioCreado
+    note on link
+        <b>Sistema confirma</b>
+        * Usuario creado correctamente
+        * Actualiza lista de usuarios
+    end note
+}
+
+CrearUsuario -down-> endState
+
+@enduml
