@@ -1,0 +1,48 @@
+@startuml CU-15_MatricularAlumno
+skinparam {
+    NoteBackgroundColor #whiteSmoke
+    ArrowColor #green
+    NoteBorderColor #black
+    linetype polyline
+}
+
+skinparam state {
+    BackgroundColor #whiteSmoke
+}
+
+hide empty description
+
+state startState as "GESTION_MATRICULAS"
+state endState as "GESTION_MATRICULAS"
+
+startState -down-> MatricularAlumno
+
+state MatricularAlumno {
+    state SeleccionAlumno as " "
+    state ValidarMatricula <<choice>>
+    state AlumnoMatriculado as " "
+
+    SeleccionAlumno --> ValidarMatricula
+    note on link
+        <b>Profesor selecciona</b>
+        * Alumno a matricular
+        * Asignatura destino
+    end note
+
+    ValidarMatricula -[#red]-> SeleccionAlumno
+    note on link
+        <b>Sistema muestra</b>
+        * Error: "El alumno ya está matriculado"
+    end note
+
+    ValidarMatricula --> AlumnoMatriculado
+    note on link
+        <b>Sistema confirma</b>
+        * Alumno matriculado correctamente
+        * Actualiza lista de alumnos
+    end note
+}
+
+MatricularAlumno -down-> endState
+
+@enduml
