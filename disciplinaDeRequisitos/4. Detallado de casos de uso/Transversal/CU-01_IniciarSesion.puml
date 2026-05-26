@@ -13,7 +13,7 @@ skinparam state {
 hide empty description
 
 state startState as "INITIAL"
-state endState as "DASHBOARD"
+state endState as "DASHBOARD_ROL"
 
 startState -down-> IniciarSesion
 
