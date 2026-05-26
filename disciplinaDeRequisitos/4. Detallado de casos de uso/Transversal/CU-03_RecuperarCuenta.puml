@@ -1,0 +1,73 @@
+@startuml CU-03_RecuperarCuenta
+skinparam {
+    NoteBackgroundColor #whiteSmoke
+    ArrowColor #green
+    NoteBorderColor #black
+    linetype polyline
+}
+
+skinparam state {
+    BackgroundColor #whiteSmoke
+}
+
+hide empty description
+
+state startState as "INITIAL"
+state endState as "INITIAL"
+
+startState -down-> RecuperarCuenta
+
+state RecuperarCuenta {
+    state SolicitudRecuperacion as " "
+    state ValidarCorreo <<choice>>
+    state EnvioEnlace as " "
+    state NuevaContrasena as " "
+    state ValidarContrasena <<choice>>
+    state ContrasenaActualizada as " "
+
+    SolicitudRecuperacion --> ValidarCorreo
+    note on link
+        <b>Usuario introduce</b>
+        * Correo electrónico registrado
+    end note
+
+    ValidarCorreo -[#red]-> SolicitudRecuperacion
+    note on link
+        <b>Sistema muestra</b>
+        * Error: "Correo no registrado"
+    end note
+
+    ValidarCorreo --> EnvioEnlace
+    note on link
+        <b>Sistema envía</b>
+        * Enlace de recuperación al correo
+    end note
+
+    EnvioEnlace --> NuevaContrasena
+    note on link
+        <b>Usuario accede</b>
+        * Al enlace recibido
+    end note
+
+    NuevaContrasena --> ValidarContrasena
+    note on link
+        <b>Usuario introduce</b>
+        * Introduce nueva contraseña
+    end note
+
+    ValidarContrasena -[#red]-> NuevaContrasena
+    note on link
+        <b>Sistema muestra</b>
+        * Error: "La contraseña no cumple los requisitos"
+    end note
+
+    ValidarContrasena --> ContrasenaActualizada
+    note on link
+        <b>Sistema confirma</b>
+        * Contraseña actualizada correctamente
+    end note
+}
+
+RecuperarCuenta -down-> endState
+
+@enduml
