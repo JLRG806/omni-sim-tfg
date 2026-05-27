@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WF-06: Formulario Crear/Editar Asignatura</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f0f0; min-height: 100vh; }
+        .wireframe-label { position: fixed; top: 10px; left: 10px; background: #333; color: #fff; padding: 6px 14px; border-radius: 4px; font-size: 12px; z-index: 100; }
+        .header { background: #fff; border-bottom: 2px solid #ccc; padding: 12px 24px; display: flex; justify-content: space-between; align-items: center; }
+        .header-left { display: flex; align-items: center; gap: 12px; }
+        .header-logo { width: 36px; height: 36px; background: #e0e0e0; border: 1px dashed #aaa; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 9px; color: #888; }
+        .header-title { font-size: 16px; font-weight: 700; color: #333; }
+        .header-right { display: flex; align-items: center; gap: 16px; }
+        .header-role { font-size: 12px; color: #888; background: #f0f0f0; padding: 4px 10px; border-radius: 4px; }
+        .header-user { font-size: 13px; color: #555; }
+        .btn-logout { padding: 6px 14px; background: #fff; border: 1px solid #ccc; border-radius: 4px; font-size: 12px; color: #888; cursor: pointer; }
+        .layout { display: flex; min-height: calc(100vh - 60px); }
+        .sidebar { width: 220px; background: #fff; border-right: 2px solid #ccc; padding: 16px 0; }
+        .sidebar-item { padding: 10px 20px; font-size: 13px; color: #666; cursor: pointer; display: flex; align-items: center; gap: 10px; }
+        .sidebar-item.active { background: #f0f0f0; color: #333; font-weight: 600; border-left: 3px solid #888; }
+        .sidebar-icon { width: 18px; height: 18px; background: #ddd; border-radius: 3px; }
+        .main { flex: 1; padding: 24px; }
+        .breadcrumb { font-size: 12px; color: #888; margin-bottom: 16px; }
+        .breadcrumb a { color: #888; text-decoration: underline; cursor: pointer; }
+        .page-title { font-size: 20px; font-weight: 700; color: #333; margin-bottom: 24px; }
+        .form-container { background: #fff; border: 2px solid #ccc; border-radius: 8px; padding: 28px; max-width: 600px; }
+        .form-row { display: flex; gap: 16px; margin-bottom: 18px; }
+        .form-group { flex: 1; }
+        .form-group.full { flex: none; width: 100%; margin-bottom: 18px; }
+        .form-group label { display: block; font-size: 12px; color: #555; margin-bottom: 5px; font-weight: 600; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px 12px; border: 2px solid #ddd; border-radius: 6px; font-size: 13px; background: #fafafa; color: #555; font-family: inherit; }
+        .form-group textarea { resize: vertical; min-height: 80px; }
+        .form-group select { appearance: auto; }
+        .form-actions { display: flex; gap: 10px; margin-top: 24px; padding-top: 20px; border-top: 1px solid #eee; }
+        .btn-primary { padding: 11px 24px; background: #bbb; border: 2px solid #999; border-radius: 6px; font-size: 14px; color: #fff; cursor: pointer; font-weight: 600; }
+        .btn-secondary { padding: 11px 24px; background: #fff; border: 2px solid #ccc; border-radius: 6px; font-size: 14px; color: #888; cursor: pointer; font-weight: 600; }
+    </style>
+</head>
+<body>
+    <div class="wireframe-label">WF-06: Formulario Crear/Editar Asignatura — CU-10, CU-11</div>
+
+    <div class="header">
+        <div class="header-left">
+            <div class="header-logo">Logo</div>
+            <span class="header-title">OmniSim</span>
+        </div>
+        <div class="header-right">
+            <span class="header-role">Administrador</span>
+            <span class="header-user">admin@universidad.edu</span>
+            <button class="btn-logout">Cerrar sesión</button>
+        </div>
+    </div>
+
+    <div class="layout">
+        <div class="sidebar">
+            <div class="sidebar-item">
+                <div class="sidebar-icon"></div>
+                Gestión de Usuarios
+            </div>
+            <div class="sidebar-item active">
+                <div class="sidebar-icon"></div>
+                Gestión de Asignaturas
+            </div>
+        </div>
+
+        <div class="main">
+            <div class="breadcrumb">
+                <a>Gestión de Asignaturas</a> / Crear Asignatura
+            </div>
+            <h1 class="page-title">Crear Asignatura</h1>
+
+            <div class="form-container">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Código</label>
+                        <input type="text" value="INF-301" disabled>
+                    </div>
+                    <div class="form-group">
+                        <label>Nombre</label>
+                        <input type="text" value="Ingeniería de Requisitos" disabled>
+                    </div>
+                </div>
+
+                <div class="form-group full">
+                    <label>Descripción</label>
+                    <textarea disabled>Asignatura enfocada en técnicas de elicitación y gestión de requisitos de software...</textarea>
+                </div>
+
+                <div class="form-group full">
+                    <label>Profesor asignado</label>
+                    <select disabled>
+                        <option>Juan García López</option>
+                        <option>Laura Méndez Ruiz</option>
+                        <option>Pedro Sánchez Mora</option>
+                    </select>
+                </div>
+
+                <div class="form-actions">
+                    <button class="btn-primary">Guardar Asignatura</button>
+                    <button class="btn-secondary">Cancelar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
