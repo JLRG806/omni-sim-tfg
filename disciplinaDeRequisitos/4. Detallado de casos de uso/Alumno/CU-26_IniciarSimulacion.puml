@@ -1,0 +1,55 @@
+@startuml CU-26_IniciarSimulacion
+skinparam {
+    NoteBackgroundColor #whiteSmoke
+    ArrowColor #green
+    NoteBorderColor #black
+    linetype polyline
+}
+
+skinparam state {
+    BackgroundColor #whiteSmoke
+}
+
+hide empty description
+
+state startState as "DASHBOARD_ALUMNO"
+state endState as "SIMULACION_EN_CURSO"
+
+startState -down-> IniciarSimulacion
+
+state IniciarSimulacion {
+    state SeleccionEscenario as " "
+    state ValidarEscenario <<choice>>
+    state InicializarSesion as " "
+    state SesionActiva as " "
+
+    SeleccionEscenario --> ValidarEscenario
+    note on link
+        <b>Alumno selecciona</b>
+        * Escenario publicado
+    end note
+
+    ValidarEscenario -[#red]-> SeleccionEscenario
+    note on link
+        <b>Sistema muestra</b>
+        * Error: "Escenario no disponible"
+    end note
+
+    ValidarEscenario --> InicializarSesion
+    note on link
+        <b>Sistema crea</b>
+        * Nueva sesión de simulación
+        * Carga perfil del agente
+    end note
+
+    InicializarSesion --> SesionActiva
+    note on link
+        <b>Orquestador IA</b>
+        * Inicializa contexto del personaje
+        * Envía mensaje de bienvenida
+    end note
+}
+
+IniciarSimulacion -down-> endState
+
+@enduml
