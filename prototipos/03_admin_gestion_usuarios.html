@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WF-03: Dashboard Admin — Gestión Usuarios</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f0f0; min-height: 100vh; }
+        .wireframe-label { position: fixed; top: 10px; left: 10px; background: #333; color: #fff; padding: 6px 14px; border-radius: 4px; font-size: 12px; z-index: 100; }
+
+        /* Header */
+        .header { background: #fff; border-bottom: 2px solid #ccc; padding: 12px 24px; display: flex; justify-content: space-between; align-items: center; }
+        .header-left { display: flex; align-items: center; gap: 12px; }
+        .header-logo { width: 36px; height: 36px; background: #e0e0e0; border: 1px dashed #aaa; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 9px; color: #888; }
+        .header-title { font-size: 16px; font-weight: 700; color: #333; }
+        .header-right { display: flex; align-items: center; gap: 16px; }
+        .header-role { font-size: 12px; color: #888; background: #f0f0f0; padding: 4px 10px; border-radius: 4px; }
+        .header-user { font-size: 13px; color: #555; }
+        .btn-logout { padding: 6px 14px; background: #fff; border: 1px solid #ccc; border-radius: 4px; font-size: 12px; color: #888; cursor: pointer; }
+
+        /* Layout */
+        .layout { display: flex; min-height: calc(100vh - 60px); }
+
+        /* Sidebar */
+        .sidebar { width: 220px; background: #fff; border-right: 2px solid #ccc; padding: 16px 0; }
+        .sidebar-item { padding: 10px 20px; font-size: 13px; color: #666; cursor: pointer; display: flex; align-items: center; gap: 10px; }
+        .sidebar-item:hover { background: #f5f5f5; }
+        .sidebar-item.active { background: #f0f0f0; color: #333; font-weight: 600; border-left: 3px solid #888; }
+        .sidebar-icon { width: 18px; height: 18px; background: #ddd; border-radius: 3px; }
+
+        /* Main content */
+        .main { flex: 1; padding: 24px; }
+        .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .page-title { font-size: 20px; font-weight: 700; color: #333; }
+        .btn-primary { padding: 10px 20px; background: #bbb; border: 2px solid #999; border-radius: 6px; font-size: 13px; color: #fff; cursor: pointer; font-weight: 600; }
+
+        /* Search bar */
+        .search-bar { display: flex; gap: 10px; margin-bottom: 20px; }
+        .search-input { flex: 1; padding: 10px 14px; border: 2px solid #ddd; border-radius: 6px; font-size: 13px; background: #fafafa; color: #999; }
+        .btn-search { padding: 10px 18px; background: #ddd; border: 2px solid #ccc; border-radius: 6px; font-size: 13px; color: #666; cursor: pointer; }
+
+        /* Table */
+        .table-container { background: #fff; border: 2px solid #ccc; border-radius: 8px; overflow: hidden; }
+        table { width: 100%; border-collapse: collapse; }
+        th { background: #f5f5f5; padding: 12px 16px; text-align: left; font-size: 12px; color: #888; font-weight: 600; text-transform: uppercase; border-bottom: 2px solid #e0e0e0; }
+        td { padding: 12px 16px; font-size: 13px; color: #555; border-bottom: 1px solid #eee; }
+        tr:hover td { background: #fafafa; }
+        .badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; }
+        .badge-admin { background: #e8e8e8; color: #666; }
+        .badge-prof { background: #e8e8e8; color: #666; }
+        .badge-alum { background: #e8e8e8; color: #666; }
+        .actions { display: flex; gap: 8px; }
+        .btn-action { padding: 5px 12px; border: 1px solid #ddd; border-radius: 4px; font-size: 11px; color: #777; cursor: pointer; background: #fff; }
+        .btn-action.delete { border-color: #ccc; color: #999; }
+
+        /* Pagination */
+        .pagination { display: flex; justify-content: space-between; align-items: center; padding: 12px 16px; }
+        .pagination-info { font-size: 12px; color: #888; }
+        .pagination-buttons { display: flex; gap: 6px; }
+        .page-btn { width: 32px; height: 32px; border: 1px solid #ddd; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #888; background: #fff; cursor: pointer; }
+        .page-btn.active { background: #888; color: #fff; }
+    </style>
+</head>
+<body>
+    <div class="wireframe-label">WF-03: Dashboard Admin — Gestión Usuarios — CU-04, CU-08</div>
+
+    <!-- Header -->
+    <div class="header">
+        <div class="header-left">
+            <div class="header-logo">Logo</div>
+            <span class="header-title">OmniSim</span>
+        </div>
+        <div class="header-right">
+            <span class="header-role">Administrador</span>
+            <span class="header-user">admin@universidad.edu</span>
+            <button class="btn-logout">Cerrar sesión</button>
+        </div>
+    </div>
+
+    <div class="layout">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-item active">
+                <div class="sidebar-icon"></div>
+                Gestión de Usuarios
+            </div>
+            <div class="sidebar-item">
+                <div class="sidebar-icon"></div>
+                Gestión de Asignaturas
+            </div>
+        </div>
+
+        <!-- Main -->
+        <div class="main">
+            <div class="page-header">
+                <h1 class="page-title">Gestión de Usuarios</h1>
+                <button class="btn-primary">+ Crear Usuario</button>
+            </div>
+
+            <div class="search-bar">
+                <input class="search-input" type="text" value="Buscar por nombre, correo o rol..." disabled>
+                <button class="btn-search">Buscar</button>
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Correo</th>
+                            <th>Rol</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Juan García López</td>
+                            <td>j.garcia@universidad.edu</td>
+                            <td><span class="badge badge-prof">Profesor</span></td>
+                            <td>Activo</td>
+                            <td class="actions">
+                                <button class="btn-action">Editar</button>
+                                <button class="btn-action delete">Eliminar</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>María Fernández Ruiz</td>
+                            <td>m.fernandez@universidad.edu</td>
+                            <td><span class="badge badge-alum">Alumno</span></td>
+                            <td>Activo</td>
+                            <td class="actions">
+                                <button class="btn-action">Editar</button>
+                                <button class="btn-action delete">Eliminar</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Carlos Martín Soto</td>
+                            <td>c.martin@universidad.edu</td>
+                            <td><span class="badge badge-admin">Administrador</span></td>
+                            <td>Activo</td>
+                            <td class="actions">
+                                <button class="btn-action">Editar</button>
+                                <button class="btn-action delete">Eliminar</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Ana Torres Díaz</td>
+                            <td>a.torres@universidad.edu</td>
+                            <td><span class="badge badge-alum">Alumno</span></td>
+                            <td>Inactivo</td>
+                            <td class="actions">
+                                <button class="btn-action">Editar</button>
+                                <button class="btn-action delete">Eliminar</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Pedro Sánchez Mora</td>
+                            <td>p.sanchez@universidad.edu</td>
+                            <td><span class="badge badge-prof">Profesor</span></td>
+                            <td>Activo</td>
+                            <td class="actions">
+                                <button class="btn-action">Editar</button>
+                                <button class="btn-action delete">Eliminar</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="pagination">
+                    <span class="pagination-info">Mostrando 1-5 de 23 usuarios</span>
+                    <div class="pagination-buttons">
+                        <div class="page-btn">&lt;</div>
+                        <div class="page-btn active">1</div>
+                        <div class="page-btn">2</div>
+                        <div class="page-btn">3</div>
+                        <div class="page-btn">5</div>
+                        <div class="page-btn">&gt;</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
