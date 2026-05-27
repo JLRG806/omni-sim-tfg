@@ -1,0 +1,48 @@
+@startuml CU-23_RevisarHistorial
+skinparam {
+    NoteBackgroundColor #whiteSmoke
+    ArrowColor #green
+    NoteBorderColor #black
+    linetype polyline
+}
+
+skinparam state {
+    BackgroundColor #whiteSmoke
+}
+
+hide empty description
+
+state startState as "DASHBOARD_PROFESOR"
+state endState as "CENTRO_EVALUACIONES"
+
+startState -down-> RevisarHistorial
+
+state RevisarHistorial {
+    state SolicitudHistorial as " "
+    state SeleccionAlumno as " "
+    state MostrarSesiones as " "
+
+    SolicitudHistorial --> SeleccionAlumno
+    note on link
+        <b>Profesor accede</b>
+        * Al centro de evaluaciones
+        * Sistema muestra lista de alumnos
+    end note
+
+    SeleccionAlumno --> MostrarSesiones
+    note on link
+        <b>Profesor selecciona</b>
+        * Alumno a revisar
+    end note
+
+    MostrarSesiones --> [*]
+    note on link
+        <b>Sistema muestra</b>
+        * Historial de sesiones del alumno
+        * Escenario, fecha, estado, mensajes
+    end note
+}
+
+RevisarHistorial -down-> endState
+
+@enduml
