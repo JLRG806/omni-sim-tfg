@@ -1,0 +1,64 @@
+@startuml CU-29_FinalizarSesion
+skinparam {
+    NoteBackgroundColor #whiteSmoke
+    ArrowColor #green
+    NoteBorderColor #black
+    linetype polyline
+}
+
+skinparam state {
+    BackgroundColor #whiteSmoke
+}
+
+hide empty description
+
+state startState as "SIMULACION_EN_CURSO"
+state endState as "DASHBOARD_ALUMNO"
+
+startState -down-> FinalizarSesion
+
+state FinalizarSesion {
+    state SolicitudFinalizacion as " "
+    state ConfirmarFinalizacion <<choice>>
+    state IniciarProcesamiento as " "
+    state SesionEnProceso as " "
+
+    SolicitudFinalizacion --> ConfirmarFinalizacion
+    note on link
+        <b>Alumno solicita</b>
+        * Finalizar la sesión activa
+        * Sistema pide confirmación
+    end note
+
+    ConfirmarFinalizacion -[#red]-> [*]
+    note on link
+        <b>Alumno cancela</b>
+        * Vuelve a la simulación
+    end note
+
+    ConfirmarFinalizacion --> IniciarProcesamiento
+    note on link
+        <b>Sistema registra</b>
+        * Sesión marcada como "Procesando"
+        * Solicita generación de resultados
+    end note
+
+    IniciarProcesamiento --> SesionEnProceso
+    note on link
+        <b>Orquestador IA (background)</b>
+        * Inicia generación de resultados
+        * Notifica al backend al completar
+        * Sesión pasa a "Finalizada"
+    end note
+}
+
+FinalizarSesion -down-> endState
+
+note right of endState
+  El alumno no espera.
+  Los resultados estarán
+  disponibles cuando el
+  Orquestador IA termine.
+end note
+
+@enduml
