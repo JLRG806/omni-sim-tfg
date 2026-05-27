@@ -1,0 +1,85 @@
+@startuml CU-30_ConsultarResultados
+skinparam {
+    NoteBackgroundColor #whiteSmoke
+    ArrowColor #green
+    NoteBorderColor #black
+    linetype polyline
+}
+
+skinparam state {
+    BackgroundColor #whiteSmoke
+}
+
+hide empty description
+
+state startState as "DASHBOARD_ALUMNO"
+state endState as "VISUALIZAR_RESULTADOS"
+
+startState -down-> ConsultarResultados
+
+state ConsultarResultados {
+    state SeleccionSesion as " "
+    state ValidarResultados <<choice>>
+
+    state "Resultados Validados" as Resultados {
+        state MapaDescubrimiento as " "
+        state Competencias as " "
+        state ProgresoSesiones as " "
+        state FeedbackProfesor as " "
+
+        MapaDescubrimiento --> Competencias
+        note on link
+            <b>Mapa de descubrimiento</b>
+            * % información explícita descubierta
+            * % información latente descubierta
+            * Detalle: encontrado vs no encontrado
+        end note
+
+        Competencias --> ProgresoSesiones
+        note on link
+            <b>Evaluación por competencias</b>
+            * Técnica de preguntas
+            * Cobertura temática
+            * Descubrimiento de info latente
+            * Empatía y rapport
+            * Gestión del tiempo
+            * + competencias personalizadas
+        end note
+
+        ProgresoSesiones --> FeedbackProfesor
+        note on link
+            <b>Progreso entre sesiones</b>
+            * Evolución histórica por competencia
+            * Comparativa con sesiones anteriores
+        end note
+
+        FeedbackProfesor --> [*]
+        note on link
+            <b>Calificación del profesor</b>
+            * Nota final
+            * Observaciones y feedback
+        end note
+    }
+
+    SeleccionSesion --> ValidarResultados
+    note on link
+        <b>Alumno selecciona</b>
+        * Sesión finalizada
+    end note
+
+    ValidarResultados -[#red]-> SeleccionSesion
+    note on link
+        <b>Sistema muestra</b>
+        * "Pendiente de evaluación del profesor"
+    end note
+
+    ValidarResultados --> Resultados
+    note on link
+        <b>Sistema carga</b>
+        * Resultados validados por el profesor
+    end note
+}
+
+ConsultarResultados -down-> endState
+
+@enduml
