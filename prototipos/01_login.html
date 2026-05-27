@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WF-01: Login — OmniSim</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f0f0; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .wireframe-label { position: fixed; top: 10px; left: 10px; background: #333; color: #fff; padding: 6px 14px; border-radius: 4px; font-size: 12px; z-index: 100; }
+        .login-container { background: #fff; border: 2px solid #ccc; border-radius: 8px; padding: 40px; width: 400px; text-align: center; }
+        .logo { width: 80px; height: 80px; background: #e0e0e0; border: 2px dashed #aaa; border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; color: #888; font-size: 12px; }
+        h1 { font-size: 22px; color: #333; margin-bottom: 8px; }
+        .subtitle { font-size: 13px; color: #888; margin-bottom: 30px; }
+        .form-group { margin-bottom: 18px; text-align: left; }
+        .form-group label { display: block; font-size: 13px; color: #555; margin-bottom: 5px; font-weight: 600; }
+        .form-group input { width: 100%; padding: 10px 12px; border: 2px solid #ddd; border-radius: 6px; font-size: 14px; background: #fafafa; color: #999; }
+        .btn-primary { width: 100%; padding: 12px; background: #bbb; border: 2px solid #999; border-radius: 6px; font-size: 15px; color: #fff; cursor: pointer; font-weight: 600; margin-top: 10px; }
+        .link { display: block; margin-top: 16px; font-size: 13px; color: #888; text-decoration: underline; cursor: pointer; }
+        .divider { border-top: 1px solid #eee; margin: 20px 0; }
+        .footer-text { font-size: 11px; color: #aaa; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <div class="wireframe-label">WF-01: Login — CU-01</div>
+    <div class="login-container">
+        <div class="logo">Logo</div>
+        <h1>OmniSim</h1>
+        <p class="subtitle">Plataforma de simulación multidisciplinar</p>
+        <div class="form-group">
+            <label>Correo electrónico</label>
+            <input type="text" value="usuario@universidad.edu" disabled>
+        </div>
+        <div class="form-group">
+            <label>Contraseña</label>
+            <input type="password" value="••••••••" disabled>
+        </div>
+        <button class="btn-primary">Iniciar Sesión</button>
+        <a class="link">¿Olvidaste tu contraseña?</a>
+        <div class="divider"></div>
+        <p class="footer-text">Acceso exclusivo para usuarios registrados</p>
+    </div>
+</body>
+</html>
