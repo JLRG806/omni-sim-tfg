@@ -1,0 +1,65 @@
+@startuml CU-24_EmitirCalificacion
+skinparam {
+    NoteBackgroundColor #whiteSmoke
+    ArrowColor #green
+    NoteBorderColor #black
+    linetype polyline
+}
+
+skinparam state {
+    BackgroundColor #whiteSmoke
+}
+
+hide empty description
+
+state startState as "CENTRO_EVALUACIONES"
+state endState as "CENTRO_EVALUACIONES"
+
+startState -down-> EmitirCalificacion
+
+state EmitirCalificacion {
+    state SeleccionSesion as " "
+    state GenerarPreEvaluacion as " "
+    state RevisionProfesor as " "
+    state ValidarCalificacion <<choice>>
+    state CalificacionEmitida as " "
+
+    SeleccionSesion --> GenerarPreEvaluacion
+    note on link
+        <b>Profesor selecciona</b>
+        * Sesión finalizada a evaluar
+    end note
+
+    GenerarPreEvaluacion --> RevisionProfesor
+    note on link
+        <b>Orquestador IA genera</b>
+        * Resumen ejecutivo de la sesión
+        * Evaluación por criterio
+        * Calificación sugerida
+        * Feedback propuesto para el alumno
+    end note
+
+    RevisionProfesor --> ValidarCalificacion
+    note on link
+        <b>Profesor revisa y ajusta</b>
+        * Calificación final
+        * Observaciones / feedback
+    end note
+
+    ValidarCalificacion -[#red]-> RevisionProfesor
+    note on link
+        <b>Sistema muestra</b>
+        * Error: "Calificación fuera de rango"
+    end note
+
+    ValidarCalificacion --> CalificacionEmitida
+    note on link
+        <b>Sistema confirma</b>
+        * Calificación registrada
+        * Resultado visible para el alumno
+    end note
+}
+
+EmitirCalificacion -down-> endState
+
+@enduml
