@@ -1,0 +1,55 @@
+@startuml CU-28_EnviarMensaje
+skinparam {
+    NoteBackgroundColor #whiteSmoke
+    ArrowColor #green
+    NoteBorderColor #black
+    linetype polyline
+}
+
+skinparam state {
+    BackgroundColor #whiteSmoke
+}
+
+hide empty description
+
+state startState as "SIMULACION_EN_CURSO"
+state endState as "SIMULACION_EN_CURSO"
+
+startState -down-> EnviarMensaje
+
+state EnviarMensaje {
+    state RedaccionMensaje as " "
+    state ValidarMensaje <<choice>>
+    state ProcesarRespuesta as " "
+    state MostrarRespuesta as " "
+
+    RedaccionMensaje --> ValidarMensaje
+    note on link
+        <b>Alumno redacta</b>
+        * Mensaje de texto al personaje
+    end note
+
+    ValidarMensaje -[#red]-> RedaccionMensaje
+    note on link
+        <b>Sistema muestra</b>
+        * Error: "El mensaje no puede estar vacío"
+    end note
+
+    ValidarMensaje --> ProcesarRespuesta
+    note on link
+        <b>Sistema registra</b>
+        * Mensaje del alumno
+        * Envía al Orquestador IA
+    end note
+
+    ProcesarRespuesta --> MostrarRespuesta
+    note on link
+        <b>Orquestador IA genera</b>
+        * Respuesta del personaje
+        * Según perfil, contexto e historial
+    end note
+}
+
+EnviarMensaje -down-> endState
+
+@enduml
