@@ -1,0 +1,42 @@
+@startuml CU-25_NavDashboardAlumno
+skinparam {
+    NoteBackgroundColor #whiteSmoke
+    ArrowColor #green
+    NoteBorderColor #black
+    linetype polyline
+}
+
+skinparam state {
+    BackgroundColor #whiteSmoke
+}
+
+hide empty description
+
+state startState1 as "SIMULACION_EN_CURSO"
+state startState2 as "VISUALIZAR_RESULTADOS"
+state endState as "DASHBOARD_ALUMNO"
+
+startState1 -down-> NavDashboardAlumno
+startState2 -down-> NavDashboardAlumno
+
+state NavDashboardAlumno {
+    state SolicitudNavegacion as " "
+    state CargarDashboard as " "
+
+    SolicitudNavegacion --> CargarDashboard
+    note on link
+        <b>Alumno solicita</b>
+        * Volver al dashboard principal
+    end note
+
+    CargarDashboard --> [*]
+    note on link
+        <b>Sistema muestra</b>
+        * Lista de asignaturas matriculadas
+        * Escenarios disponibles por asignatura
+    end note
+}
+
+NavDashboardAlumno -down-> endState
+
+@enduml
