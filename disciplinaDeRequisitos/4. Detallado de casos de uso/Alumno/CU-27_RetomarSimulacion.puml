@@ -1,0 +1,55 @@
+@startuml CU-27_RetomarSimulacion
+skinparam {
+    NoteBackgroundColor #whiteSmoke
+    ArrowColor #green
+    NoteBorderColor #black
+    linetype polyline
+}
+
+skinparam state {
+    BackgroundColor #whiteSmoke
+}
+
+hide empty description
+
+state startState as "DASHBOARD_ALUMNO"
+state endState as "SIMULACION_EN_CURSO"
+
+startState -down-> RetomarSimulacion
+
+state RetomarSimulacion {
+    state SeleccionSesion as " "
+    state ValidarSesion <<choice>>
+    state RestaurarContexto as " "
+    state SesionActiva as " "
+
+    SeleccionSesion --> ValidarSesion
+    note on link
+        <b>Alumno selecciona</b>
+        * Sesión en curso (pausada)
+    end note
+
+    ValidarSesion -[#red]-> SeleccionSesion
+    note on link
+        <b>Sistema muestra</b>
+        * Error: "La sesión ya no está disponible"
+    end note
+
+    ValidarSesion --> RestaurarContexto
+    note on link
+        <b>Sistema restaura</b>
+        * Historial de mensajes previos
+        * Estado de la sesión
+    end note
+
+    RestaurarContexto --> SesionActiva
+    note on link
+        <b>Orquestador IA</b>
+        * Recarga contexto del personaje
+        * Restaura historial de conversación
+    end note
+}
+
+RetomarSimulacion -down-> endState
+
+@enduml
