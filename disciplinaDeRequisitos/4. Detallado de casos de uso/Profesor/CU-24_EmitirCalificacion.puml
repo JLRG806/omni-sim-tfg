@@ -19,34 +19,41 @@ startState -down-> EmitirCalificacion
 
 state EmitirCalificacion {
     state SeleccionSesion as " "
-    state GenerarPreEvaluacion as " "
-    state RevisionProfesor as " "
+    state RevisionMapaDescubrimiento as " "
+    state RevisionCompetencias as " "
+    state IngresoCalificacion as " "
     state ValidarCalificacion <<choice>>
     state CalificacionEmitida as " "
 
-    SeleccionSesion --> GenerarPreEvaluacion
+    SeleccionSesion --> RevisionMapaDescubrimiento
     note on link
         <b>Profesor selecciona</b>
         * Sesión finalizada a evaluar
     end note
 
-    GenerarPreEvaluacion --> RevisionProfesor
-    note on link
-        <b>Orquestador IA genera</b>
-        * Resumen ejecutivo de la sesión
-        * Evaluación por criterio
-        * Calificación sugerida
-        * Feedback propuesto para el alumno
-    end note
-
-    RevisionProfesor --> ValidarCalificacion
+    RevisionMapaDescubrimiento --> RevisionCompetencias
     note on link
         <b>Profesor revisa y ajusta</b>
+        * Mapa de descubrimiento (borrador IA)
+        * % info explícita / latente descubierta
+        * Detalle encontrado vs no encontrado
+    end note
+
+    RevisionCompetencias --> IngresoCalificacion
+    note on link
+        <b>Profesor revisa y ajusta</b>
+        * Puntuación por competencia (borrador IA)
+        * Fijas + personalizadas
+    end note
+
+    IngresoCalificacion --> ValidarCalificacion
+    note on link
+        <b>Profesor introduce</b>
         * Calificación final
         * Observaciones / feedback
     end note
 
-    ValidarCalificacion -[#red]-> RevisionProfesor
+    ValidarCalificacion -[#red]-> IngresoCalificacion
     note on link
         <b>Sistema muestra</b>
         * Error: "Calificación fuera de rango"
@@ -55,8 +62,8 @@ state EmitirCalificacion {
     ValidarCalificacion --> CalificacionEmitida
     note on link
         <b>Sistema confirma</b>
-        * Calificación registrada
-        * Resultado visible para el alumno
+        * Resultados validados y publicados
+        * Visibles para el alumno
     end note
 }
 
