@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WF-09: Crear Escenario — Fase 1</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f0f0; min-height: 100vh; }
+        .wireframe-label { position: fixed; top: 10px; left: 10px; background: #333; color: #fff; padding: 6px 14px; border-radius: 4px; font-size: 12px; z-index: 100; }
+        .header { background: #fff; border-bottom: 2px solid #ccc; padding: 12px 24px; display: flex; justify-content: space-between; align-items: center; }
+        .header-left { display: flex; align-items: center; gap: 12px; }
+        .header-logo { width: 36px; height: 36px; background: #e0e0e0; border: 1px dashed #aaa; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 9px; color: #888; }
+        .header-title { font-size: 16px; font-weight: 700; color: #333; }
+        .header-right { display: flex; align-items: center; gap: 16px; }
+        .header-role { font-size: 12px; color: #888; background: #f0f0f0; padding: 4px 10px; border-radius: 4px; }
+        .header-user { font-size: 13px; color: #555; }
+        .btn-logout { padding: 6px 14px; background: #fff; border: 1px solid #ccc; border-radius: 4px; font-size: 12px; color: #888; cursor: pointer; }
+        .main { max-width: 700px; margin: 0 auto; padding: 24px; }
+        .breadcrumb { font-size: 12px; color: #888; margin-bottom: 16px; }
+        .breadcrumb a { color: #888; text-decoration: underline; cursor: pointer; }
+        .stepper { display: flex; align-items: center; justify-content: center; margin-bottom: 28px; gap: 10px; }
+        .stepper-step { display: flex; align-items: center; gap: 8px; }
+        .stepper-dot { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: #fff; }
+        .stepper-dot.active { background: #888; }
+        .stepper-dot.inactive { background: #ddd; }
+        .stepper-label { font-size: 13px; color: #555; font-weight: 600; }
+        .stepper-label.inactive { color: #bbb; }
+        .stepper-line { width: 40px; height: 2px; background: #ddd; }
+        .page-title { font-size: 20px; font-weight: 700; color: #333; margin-bottom: 6px; }
+        .page-subtitle { font-size: 13px; color: #888; margin-bottom: 24px; }
+        .form-container { background: #fff; border: 2px solid #ccc; border-radius: 8px; padding: 28px; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; font-size: 12px; color: #555; margin-bottom: 5px; font-weight: 600; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px 12px; border: 2px solid #ddd; border-radius: 6px; font-size: 13px; background: #fafafa; color: #555; font-family: inherit; }
+        .form-group textarea { resize: vertical; min-height: 90px; }
+        .form-group select { appearance: auto; }
+        .form-group .hint { font-size: 11px; color: #aaa; margin-top: 4px; }
+        .objectives-input { display: flex; gap: 8px; margin-bottom: 10px; }
+        .objectives-input input { flex: 1; }
+        .btn-add { padding: 10px 16px; background: #ddd; border: 2px solid #ccc; border-radius: 6px; font-size: 13px; color: #666; cursor: pointer; font-weight: 600; white-space: nowrap; }
+        .objectives-list { list-style: none; }
+        .objectives-list li { display: flex; justify-content: space-between; align-items: center; padding: 9px 12px; background: #f9f9f9; border: 1px solid #e0e0e0; border-radius: 6px; margin-bottom: 6px; font-size: 13px; color: #444; }
+        .btn-remove { background: none; border: none; font-size: 16px; color: #bbb; cursor: pointer; padding: 0 4px; }
+        .btn-remove:hover { color: #888; }
+        .form-actions { display: flex; justify-content: space-between; margin-top: 24px; padding-top: 20px; border-top: 1px solid #eee; }
+        .btn-primary { padding: 11px 24px; background: #bbb; border: 2px solid #999; border-radius: 6px; font-size: 14px; color: #fff; cursor: pointer; font-weight: 600; }
+        .btn-secondary { padding: 11px 24px; background: #fff; border: 2px solid #ccc; border-radius: 6px; font-size: 14px; color: #888; cursor: pointer; font-weight: 600; }
+    </style>
+</head>
+<body>
+    <div class="wireframe-label">WF-09: Crear Escenario — Fase 1 — CU-18</div>
+
+    <div class="header">
+        <div class="header-left">
+            <div class="header-logo">Logo</div>
+            <span class="header-title">OmniSim</span>
+        </div>
+        <div class="header-right">
+            <span class="header-role">Profesor</span>
+            <span class="header-user">j.garcia@universidad.edu</span>
+            <button class="btn-logout">Cerrar sesión</button>
+        </div>
+    </div>
+
+    <div class="main">
+        <div class="breadcrumb">
+            <a>Mis Asignaturas</a> / <a>Ingeniería de Requisitos</a> / Crear Escenario
+        </div>
+
+        <div class="stepper">
+            <div class="stepper-step">
+                <div class="stepper-dot active">1</div>
+                <span class="stepper-label">Escenario</span>
+            </div>
+            <div class="stepper-line"></div>
+            <div class="stepper-step">
+                <div class="stepper-dot inactive">2</div>
+                <span class="stepper-label inactive">Perfil del Agente</span>
+            </div>
+        </div>
+
+        <h1 class="page-title">Datos del Escenario</h1>
+        <p class="page-subtitle">Define el contexto de la simulación</p>
+
+        <div class="form-container">
+            <div class="form-group">
+                <label>Título del escenario</label>
+                <input type="text" value="Entrevista con Director de Hospital" disabled>
+            </div>
+
+            <div class="form-group">
+                <label>Área de conocimiento</label>
+                <select disabled>
+                    <option>Ingeniería Informática</option>
+                    <option>Psicología Clínica</option>
+                    <option>Nutrición y Dietética</option>
+                    <option>Ingeniería Civil</option>
+                </select>
+                <p class="hint">Disciplina en la que se enmarca la simulación</p>
+            </div>
+
+            <div class="form-group">
+                <label>Descripción de la situación</label>
+                <textarea disabled>Un hospital regional necesita digitalizar su gestión de citas y expedientes médicos. El director del hospital ha solicitado una reunión para discutir las necesidades del centro...</textarea>
+                <p class="hint">Contexto que el alumno verá antes de iniciar la simulación</p>
+            </div>
+
+            <div class="form-group">
+                <label>Objetivos de aprendizaje</label>
+                <div class="objectives-input">
+                    <input type="text" placeholder="Escribe un objetivo y pulsa Añadir..." disabled>
+                    <button class="btn-add">+ Añadir</button>
+                </div>
+                <ul class="objectives-list">
+                    <li>
+                        Identificar requisitos funcionales a partir de una entrevista
+                        <button class="btn-remove">✕</button>
+                    </li>
+                    <li>
+                        Detectar requisitos no verbalizados mediante preguntas de profundización
+                        <button class="btn-remove">✕</button>
+                    </li>
+                    <li>
+                        Gestionar las expectativas del stakeholder
+                        <button class="btn-remove">✕</button>
+                    </li>
+                </ul>
+                <p class="hint">Cada objetivo se evaluará individualmente al finalizar la simulación</p>
+            </div>
+
+            <div class="form-actions">
+                <button class="btn-secondary">Cancelar</button>
+                <button class="btn-primary">Siguiente: Perfil del Agente →</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
