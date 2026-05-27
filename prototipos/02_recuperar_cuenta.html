@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WF-02: Recuperar Cuenta — OmniSim</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f0f0; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        .wireframe-label { position: fixed; top: 10px; left: 10px; background: #333; color: #fff; padding: 6px 14px; border-radius: 4px; font-size: 12px; z-index: 100; }
+        .container { background: #fff; border: 2px solid #ccc; border-radius: 8px; padding: 40px; width: 420px; text-align: center; }
+        .logo { width: 60px; height: 60px; background: #e0e0e0; border: 2px dashed #aaa; border-radius: 50%; margin: 0 auto 16px; display: flex; align-items: center; justify-content: center; color: #888; font-size: 11px; }
+        h1 { font-size: 20px; color: #333; margin-bottom: 6px; }
+        .subtitle { font-size: 13px; color: #888; margin-bottom: 20px; }
+        .stepper { display: flex; justify-content: center; align-items: center; margin-bottom: 24px; gap: 8px; }
+        .stepper-dot { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: #fff; }
+        .stepper-dot.active { background: #888; }
+        .stepper-dot.inactive { background: #ddd; }
+        .stepper-line { width: 30px; height: 2px; background: #ddd; }
+        .step { display: none; text-align: left; }
+        .step.visible { display: block; }
+        .form-group { margin-bottom: 16px; }
+        .form-group label { display: block; font-size: 12px; color: #555; margin-bottom: 4px; font-weight: 600; }
+        .form-group input { width: 100%; padding: 10px 12px; border: 2px solid #ddd; border-radius: 6px; font-size: 13px; background: #fafafa; color: #999; }
+        .code-inputs { display: flex; gap: 8px; justify-content: center; margin-bottom: 16px; }
+        .code-input { width: 48px; height: 56px; text-align: center; font-size: 22px; font-weight: 700; border: 2px solid #ddd; border-radius: 8px; background: #fafafa; color: #555; }
+        .btn-primary { width: 100%; padding: 11px; background: #bbb; border: 2px solid #999; border-radius: 6px; font-size: 14px; color: #fff; cursor: pointer; font-weight: 600; }
+        .btn-nav { display: flex; gap: 10px; margin-top: 12px; }
+        .btn-nav button { flex: 1; }
+        .btn-secondary { padding: 11px; background: #fff; border: 2px solid #ccc; border-radius: 6px; font-size: 14px; color: #888; cursor: pointer; font-weight: 600; }
+        .link { display: block; margin-top: 18px; font-size: 13px; color: #888; text-decoration: underline; cursor: pointer; }
+        .msg-box { background: #f0f0f0; border: 1px dashed #bbb; border-radius: 6px; padding: 10px; font-size: 12px; color: #777; text-align: center; margin-top: 12px; }
+        .step-title { font-size: 15px; font-weight: 600; color: #444; margin-bottom: 16px; }
+        .success-icon { width: 50px; height: 50px; background: #e0e0e0; border: 2px dashed #aaa; border-radius: 50%; margin: 0 auto 12px; display: flex; align-items: center; justify-content: center; color: #888; font-size: 20px; }
+    </style>
+</head>
+<body>
+    <div class="wireframe-label">WF-02: Recuperar Cuenta — CU-03</div>
+    <div class="container">
+        <div class="logo">Logo</div>
+        <h1>Recuperar Cuenta</h1>
+        <p class="subtitle">Sigue los pasos para restablecer tu contraseña</p>
+
+        <div class="stepper">
+            <div class="stepper-dot active" id="dot1">1</div>
+            <div class="stepper-line"></div>
+            <div class="stepper-dot inactive" id="dot2">2</div>
+            <div class="stepper-line"></div>
+            <div class="stepper-dot inactive" id="dot3">3</div>
+        </div>
+
+        <!-- Paso 1: Correo -->
+        <div class="step visible" id="step1">
+            <p class="step-title">Introduce tu correo electrónico</p>
+            <div class="form-group">
+                <label>Correo electrónico</label>
+                <input type="text" value="usuario@universidad.edu" disabled>
+            </div>
+            <button class="btn-primary" onclick="goTo(2)">Enviar código</button>
+            <div class="msg-box">Se enviará un código de 6 dígitos a tu correo</div>
+        </div>
+
+        <!-- Paso 2: Código 6 dígitos -->
+        <div class="step" id="step2">
+            <p class="step-title">Introduce el código de verificación</p>
+            <div class="code-inputs">
+                <input class="code-input" type="text" value="4" disabled>
+                <input class="code-input" type="text" value="7" disabled>
+                <input class="code-input" type="text" value="2" disabled>
+                <input class="code-input" type="text" value="9" disabled>
+                <input class="code-input" type="text" value="1" disabled>
+                <input class="code-input" type="text" value="5" disabled>
+            </div>
+            <div class="btn-nav">
+                <button class="btn-secondary" onclick="goTo(1)">Atrás</button>
+                <button class="btn-primary" onclick="goTo(3)">Verificar código</button>
+            </div>
+            <div class="msg-box">Revisa tu bandeja de entrada y spam</div>
+        </div>
+
+        <!-- Paso 3: Nueva contraseña -->
+        <div class="step" id="step3">
+            <p class="step-title">Crea tu nueva contraseña</p>
+            <div class="form-group">
+                <label>Nueva contraseña</label>
+                <input type="password" value="••••••••" disabled>
+            </div>
+            <div class="form-group">
+                <label>Confirmar contraseña</label>
+                <input type="password" value="••••••••" disabled>
+            </div>
+            <div class="btn-nav">
+                <button class="btn-secondary" onclick="goTo(2)">Atrás</button>
+                <button class="btn-primary">Restablecer</button>
+            </div>
+        </div>
+
+        <a class="link">Volver al inicio de sesión</a>
+    </div>
+
+    <script>
+        function goTo(step) {
+            document.querySelectorAll('.step').forEach(s => s.classList.remove('visible'));
+            document.getElementById('step' + step).classList.add('visible');
+            for (let i = 1; i <= 3; i++) {
+                const dot = document.getElementById('dot' + i);
+                dot.classList.toggle('active', i <= step);
+                dot.classList.toggle('inactive', i > step);
+            }
+        }
+    </script>
+</body>
+</html>
