@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WF-11: Gestión Matrículas</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f0f0; min-height: 100vh; }
+        .wireframe-label { position: fixed; top: 10px; left: 10px; background: #333; color: #fff; padding: 6px 14px; border-radius: 4px; font-size: 12px; z-index: 100; }
+        .header { background: #fff; border-bottom: 2px solid #ccc; padding: 12px 24px; display: flex; justify-content: space-between; align-items: center; }
+        .header-left { display: flex; align-items: center; gap: 12px; }
+        .header-logo { width: 36px; height: 36px; background: #e0e0e0; border: 1px dashed #aaa; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 9px; color: #888; }
+        .header-title { font-size: 16px; font-weight: 700; color: #333; }
+        .header-right { display: flex; align-items: center; gap: 16px; }
+        .header-role { font-size: 12px; color: #888; background: #f0f0f0; padding: 4px 10px; border-radius: 4px; }
+        .header-user { font-size: 13px; color: #555; }
+        .btn-logout { padding: 6px 14px; background: #fff; border: 1px solid #ccc; border-radius: 4px; font-size: 12px; color: #888; cursor: pointer; }
+        .main { max-width: 960px; margin: 0 auto; padding: 24px; }
+        .breadcrumb { font-size: 12px; color: #888; margin-bottom: 16px; }
+        .breadcrumb a { color: #888; text-decoration: underline; cursor: pointer; }
+        .asig-header { background: #fff; border: 2px solid #ccc; border-radius: 8px; padding: 20px 24px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; }
+        .asig-info h1 { font-size: 20px; color: #333; margin-bottom: 4px; }
+        .asig-info p { font-size: 13px; color: #888; }
+        .asig-code { font-size: 12px; color: #888; background: #f0f0f0; padding: 4px 10px; border-radius: 4px; }
+        .tabs { display: flex; gap: 0; margin-bottom: 24px; background: #fff; border: 2px solid #ccc; border-radius: 8px; overflow: hidden; }
+        .tab { flex: 1; padding: 14px 20px; text-align: center; font-size: 14px; color: #888; cursor: pointer; border-right: 1px solid #eee; font-weight: 500; }
+        .tab:last-child { border-right: none; }
+        .tab.active { background: #f0f0f0; color: #333; font-weight: 600; }
+        .tab-count { display: inline-block; background: #ddd; color: #666; font-size: 11px; padding: 1px 7px; border-radius: 10px; margin-left: 6px; }
+        .tab.active .tab-count { background: #bbb; color: #fff; }
+
+        .section { background: #fff; border: 2px solid #ccc; border-radius: 8px; padding: 20px; margin-bottom: 20px; }
+        .section-title { font-size: 15px; font-weight: 600; color: #444; margin-bottom: 14px; }
+        .matricular-box { background: #fafafa; border: 1px dashed #ccc; border-radius: 6px; padding: 16px; margin-bottom: 20px; }
+        .matricular-box .section-title { font-size: 13px; margin-bottom: 10px; color: #555; }
+        .add-row { display: flex; gap: 10px; align-items: center; position: relative; }
+        .search-input { flex: 1; padding: 10px 14px; border: 2px solid #ddd; border-radius: 6px; font-size: 13px; background: #fff; color: #999; }
+        .btn-primary { padding: 10px 18px; background: #bbb; border: 2px solid #999; border-radius: 6px; font-size: 13px; color: #fff; cursor: pointer; font-weight: 600; white-space: nowrap; }
+        .autocomplete { position: absolute; top: 100%; left: 0; right: 0; background: #fff; border: 2px solid #ccc; border-top: none; border-radius: 0 0 6px 6px; z-index: 10; margin-top: -2px; max-width: calc(100% - 130px); display: none; }
+        .autocomplete.visible { display: block; }
+        .autocomplete-item { padding: 10px 14px; font-size: 13px; color: #555; cursor: pointer; border-bottom: 1px solid #eee; }
+        .autocomplete-item:hover { background: #f5f5f5; }
+        .autocomplete-item:last-child { border-bottom: none; }
+        .autocomplete-item small { display: block; color: #aaa; font-size: 11px; margin-top: 2px; }
+
+        .search-bar { display: flex; gap: 10px; margin-bottom: 16px; }
+        .table-container { overflow: hidden; }
+        table { width: 100%; border-collapse: collapse; }
+        th { background: #f5f5f5; padding: 11px 14px; text-align: left; font-size: 11px; color: #888; font-weight: 600; text-transform: uppercase; border-bottom: 2px solid #e0e0e0; }
+        td { padding: 11px 14px; font-size: 13px; color: #555; border-bottom: 1px solid #eee; }
+        tr:hover td { background: #fafafa; }
+        .student-info { display: flex; align-items: center; gap: 10px; }
+        .student-avatar { width: 32px; height: 32px; background: #e0e0e0; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 11px; color: #888; font-weight: 600; }
+        .student-name { font-weight: 600; color: #444; }
+        .student-email { font-size: 11px; color: #888; }
+        .badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: 600; background: #e8e8e8; color: #666; }
+        .actions { display: flex; gap: 8px; }
+        .btn-action { padding: 5px 12px; border: 1px solid #ddd; border-radius: 4px; font-size: 11px; color: #777; cursor: pointer; background: #fff; }
+
+        .pagination { display: flex; justify-content: space-between; align-items: center; padding-top: 12px; margin-top: 8px; border-top: 1px solid #eee; }
+        .pagination-info { font-size: 12px; color: #888; }
+        .pagination-buttons { display: flex; gap: 6px; }
+        .page-btn { width: 32px; height: 32px; border: 1px solid #ddd; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 12px; color: #888; background: #fff; cursor: pointer; }
+        .page-btn.active { background: #888; color: #fff; }
+    </style>
+</head>
+<body>
+    <div class="wireframe-label">WF-11: Gestión Matrículas — CU-15, CU-16, CU-17</div>
+
+    <div class="header">
+        <div class="header-left">
+            <div class="header-logo">Logo</div>
+            <span class="header-title">OmniSim</span>
+        </div>
+        <div class="header-right">
+            <span class="header-role">Profesor</span>
+            <span class="header-user">j.garcia@universidad.edu</span>
+            <button class="btn-logout">Cerrar sesión</button>
+        </div>
+    </div>
+
+    <div class="main">
+        <div class="breadcrumb">
+            <a>Mis Asignaturas</a> / Ingeniería de Requisitos
+        </div>
+
+        <div class="asig-header">
+            <div class="asig-info">
+                <h1>Ingeniería de Requisitos</h1>
+                <p>Técnicas de elicitación y gestión de requisitos de software</p>
+            </div>
+            <span class="asig-code">INF-301</span>
+        </div>
+
+        <div class="tabs">
+            <div class="tab">Escenarios <span class="tab-count">5</span></div>
+            <div class="tab active">Matrículas <span class="tab-count">32</span></div>
+            <div class="tab">Evaluaciones <span class="tab-count">12</span></div>
+        </div>
+
+        <div class="section">
+            <div class="matricular-box">
+                <p class="section-title">Matricular nuevo alumno</p>
+                <div class="add-row">
+                    <input class="search-input" type="text" value="ana" disabled placeholder="Buscar alumno por nombre o correo...">
+                    <button class="btn-primary">+ Matricular</button>
+                    <div class="autocomplete visible">
+                        <div class="autocomplete-item">
+                            Ana Martínez Vega
+                            <small>a.martinez@universidad.edu</small>
+                        </div>
+                        <div class="autocomplete-item">
+                            Ana Torres Díaz
+                            <small>a.torres@universidad.edu</small>
+                        </div>
+                        <div class="autocomplete-item">
+                            Anabel Ruiz Soler
+                            <small>a.ruiz@universidad.edu</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <p class="section-title">Alumnos matriculados</p>
+
+            <div class="search-bar">
+                <input class="search-input" type="text" value="Buscar alumno matriculado..." disabled>
+                <button class="btn-primary" style="background: #ddd; border-color: #ccc; color: #666;">Buscar</button>
+            </div>
+
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Alumno</th>
+                            <th>Estado</th>
+                            <th>Sesiones</th>
+                            <th>Fecha matrícula</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="student-info">
+                                    <div class="student-avatar">MF</div>
+                                    <div>
+                                        <div class="student-name">María Fernández Ruiz</div>
+                                        <div class="student-email">m.fernandez@universidad.edu</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><span class="badge">Activo</span></td>
+                            <td>5</td>
+                            <td>15 Sept 2024</td>
+                            <td class="actions">
+                                <button class="btn-action">Desmatricular</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="student-info">
+                                    <div class="student-avatar">CL</div>
+                                    <div>
+                                        <div class="student-name">Carlos López Mena</div>
+                                        <div class="student-email">c.lopez@universidad.edu</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><span class="badge">Activo</span></td>
+                            <td>3</td>
+                            <td>15 Sept 2024</td>
+                            <td class="actions">
+                                <button class="btn-action">Desmatricular</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="student-info">
+                                    <div class="student-avatar">LP</div>
+                                    <div>
+                                        <div class="student-name">Lucía Pérez Soto</div>
+                                        <div class="student-email">l.perez@universidad.edu</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><span class="badge">Activo</span></td>
+                            <td>7</td>
+                            <td>18 Sept 2024</td>
+                            <td class="actions">
+                                <button class="btn-action">Desmatricular</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div class="student-info">
+                                    <div class="student-avatar">PS</div>
+                                    <div>
+                                        <div class="student-name">Pablo Sánchez Mora</div>
+                                        <div class="student-email">p.sanchez@universidad.edu</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td><span class="badge">Activo</span></td>
+                            <td>0</td>
+                            <td>22 Sept 2024</td>
+                            <td class="actions">
+                                <button class="btn-action">Desmatricular</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="pagination">
+                    <span class="pagination-info">Mostrando 1-4 de 32 alumnos</span>
+                    <div class="pagination-buttons">
+                        <div class="page-btn">&lt;</div>
+                        <div class="page-btn active">1</div>
+                        <div class="page-btn">2</div>
+                        <div class="page-btn">3</div>
+                        <div class="page-btn">8</div>
+                        <div class="page-btn">&gt;</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
