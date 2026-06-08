@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WF-10: Crear Escenario — Fase 2 (Perfil del Agente)</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f0f0; min-height: 100vh; }
+        .wireframe-label { position: fixed; top: 10px; left: 10px; background: #333; color: #fff; padding: 6px 14px; border-radius: 4px; font-size: 12px; z-index: 100; }
+        .header { background: #fff; border-bottom: 2px solid #ccc; padding: 12px 24px; display: flex; justify-content: space-between; align-items: center; }
+        .header-left { display: flex; align-items: center; gap: 12px; }
+        .header-logo { width: 36px; height: 36px; background: #e0e0e0; border: 1px dashed #aaa; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 9px; color: #888; }
+        .header-title { font-size: 16px; font-weight: 700; color: #333; }
+        .header-right { display: flex; align-items: center; gap: 16px; }
+        .header-role { font-size: 12px; color: #888; background: #f0f0f0; padding: 4px 10px; border-radius: 4px; }
+        .header-user { font-size: 13px; color: #555; }
+        .btn-logout { padding: 6px 14px; background: #fff; border: 1px solid #ccc; border-radius: 4px; font-size: 12px; color: #888; cursor: pointer; }
+        .main { max-width: 720px; margin: 0 auto; padding: 24px; }
+        .breadcrumb { font-size: 12px; color: #888; margin-bottom: 16px; }
+        .breadcrumb a { color: #888; text-decoration: underline; cursor: pointer; }
+        .stepper { display: flex; align-items: center; justify-content: center; margin-bottom: 28px; gap: 10px; }
+        .stepper-step { display: flex; align-items: center; gap: 8px; }
+        .stepper-dot { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: #fff; }
+        .stepper-dot.active { background: #888; }
+        .stepper-dot.done { background: #aaa; }
+        .stepper-label { font-size: 13px; color: #555; font-weight: 600; }
+        .stepper-label.done { color: #888; }
+        .stepper-line { width: 40px; height: 2px; background: #aaa; }
+        .page-title { font-size: 20px; font-weight: 700; color: #333; margin-bottom: 6px; }
+        .page-subtitle { font-size: 13px; color: #888; margin-bottom: 24px; }
+        .form-container { background: #fff; border: 2px solid #ccc; border-radius: 8px; padding: 28px; }
+        .section-header { font-size: 14px; font-weight: 700; color: #444; margin-bottom: 14px; padding-bottom: 8px; border-bottom: 1px solid #eee; text-transform: uppercase; letter-spacing: 0.5px; }
+        .section-block { margin-bottom: 28px; }
+        .form-group { margin-bottom: 18px; }
+        .form-group label { display: block; font-size: 12px; color: #555; margin-bottom: 5px; font-weight: 600; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px 12px; border: 2px solid #ddd; border-radius: 6px; font-size: 13px; background: #fafafa; color: #555; font-family: inherit; }
+        .form-group textarea { resize: vertical; min-height: 70px; }
+        .form-group select { appearance: auto; }
+        .form-group .hint { font-size: 11px; color: #aaa; margin-top: 4px; font-style: italic; }
+
+        /* Avatar */
+        .avatar-row { display: flex; align-items: center; gap: 20px; }
+        .avatar-preview { width: 90px; height: 90px; background: #e0e0e0; border: 2px dashed #aaa; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #888; font-size: 11px; flex-shrink: 0; }
+        .avatar-actions { display: flex; flex-direction: column; gap: 6px; flex: 1; }
+        .btn-upload { padding: 8px 14px; background: #ddd; border: 2px solid #ccc; border-radius: 6px; font-size: 12px; color: #666; cursor: pointer; font-weight: 600; }
+        .avatar-hint { font-size: 11px; color: #aaa; font-style: italic; }
+
+        /* Lists (objetivos pattern) */
+        .list-input { display: flex; gap: 8px; margin-bottom: 10px; }
+        .list-input input { flex: 1; }
+        .btn-add { padding: 10px 16px; background: #ddd; border: 2px solid #ccc; border-radius: 6px; font-size: 13px; color: #666; cursor: pointer; font-weight: 600; white-space: nowrap; }
+        .items-list { list-style: none; }
+        .items-list li { display: flex; justify-content: space-between; align-items: center; padding: 9px 12px; background: #f9f9f9; border: 1px solid #e0e0e0; border-radius: 6px; margin-bottom: 6px; font-size: 13px; color: #444; }
+        .btn-remove { background: none; border: none; font-size: 16px; color: #bbb; cursor: pointer; padding: 0 4px; }
+
+        /* Difficulty */
+        .difficulty-group { display: flex; gap: 10px; margin-top: 4px; }
+        .difficulty-option { flex: 1; padding: 12px; border: 2px solid #ddd; border-radius: 6px; text-align: center; cursor: pointer; background: #fafafa; }
+        .difficulty-option.selected { background: #f0f0f0; border-color: #888; }
+        .difficulty-option .level { font-size: 13px; font-weight: 700; color: #555; margin-bottom: 4px; }
+        .difficulty-option .desc { font-size: 10px; color: #888; }
+
+        .form-actions { display: flex; justify-content: space-between; margin-top: 24px; padding-top: 20px; border-top: 1px solid #eee; }
+        .btn-primary { padding: 11px 24px; background: #bbb; border: 2px solid #999; border-radius: 6px; font-size: 14px; color: #fff; cursor: pointer; font-weight: 600; }
+        .btn-secondary { padding: 11px 24px; background: #fff; border: 2px solid #ccc; border-radius: 6px; font-size: 14px; color: #888; cursor: pointer; font-weight: 600; }
+    </style>
+</head>
+<body>
+    <div class="wireframe-label">WF-10: Crear Escenario — Fase 2 (Perfil del Agente) — CU-18</div>
+
+    <div class="header">
+        <div class="header-left">
+            <div class="header-logo">Logo</div>
+            <span class="header-title">OmniSim</span>
+        </div>
+        <div class="header-right">
+            <span class="header-role">Profesor</span>
+            <span class="header-user">j.garcia@universidad.edu</span>
+            <button class="btn-logout">Cerrar sesión</button>
+        </div>
+    </div>
+
+    <div class="main">
+        <div class="breadcrumb">
+            <a>Mis Asignaturas</a> / <a>Ingeniería de Requisitos</a> / Crear Escenario
+        </div>
+
+        <div class="stepper">
+            <div class="stepper-step">
+                <div class="stepper-dot done">✓</div>
+                <span class="stepper-label done">Escenario</span>
+            </div>
+            <div class="stepper-line"></div>
+            <div class="stepper-step">
+                <div class="stepper-dot active">2</div>
+                <span class="stepper-label">Perfil del Agente</span>
+            </div>
+        </div>
+
+        <h1 class="page-title">Perfil del Agente</h1>
+        <p class="page-subtitle">Define el personaje con el que el alumno conversará</p>
+
+        <div class="form-container">
+
+            <div class="section-block">
+                <p class="section-header">Identidad y Contexto</p>
+
+                <div class="form-group">
+                    <label>Avatar del personaje</label>
+                    <div class="avatar-row">
+                        <div class="avatar-preview">Avatar</div>
+                        <div class="avatar-actions">
+                            <button class="btn-upload">📁 Subir imagen</button>
+                            <p class="avatar-hint">JPG o PNG, máx. 2MB. Si no subes ninguna, se usará un avatar genérico.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>¿Quién es el personaje? (Rol / Identidad)</label>
+                    <input type="text" value="Director de hospital regional, 55 años, formación médica" disabled>
+                </div>
+
+                <div class="form-group">
+                    <label>¿Cuál es su historia? (Trasfondo)</label>
+                    <textarea disabled>Lleva 15 años dirigiendo el hospital. Ha visto fracasar dos intentos previos de digitalización. Resistente al cambio pero presionado por el ministerio para modernizarse.</textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>¿Qué sabe y qué no sabe? (Conocimientos)</label>
+                    <textarea disabled>Conoce los procesos en papel y la operativa del hospital. No entiende términos técnicos de software. Usa jerga médica.</textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Mensaje de bienvenida del personaje</label>
+                    <textarea disabled>"Buenos días, gracias por venir. Como ya sabe, llevamos años intentando modernizar este hospital sin éxito. Espero que esta vez sea diferente. Dígame, ¿por dónde quiere empezar?"</textarea>
+                    <p class="hint">Cómo abrirá la conversación el personaje al iniciar la simulación</p>
+                </div>
+            </div>
+
+            <div class="section-block">
+                <p class="section-header">Información que comparte</p>
+
+                <div class="form-group">
+                    <label>¿Qué dice abiertamente? (Información explícita)</label>
+                    <div class="list-input">
+                        <input type="text" placeholder="Añade un elemento de información explícita..." disabled>
+                        <button class="btn-add">+ Añadir</button>
+                    </div>
+                    <ul class="items-list">
+                        <li>Necesita gestión de citas médicas <button class="btn-remove">✕</button></li>
+                        <li>Quiere historial digital de pacientes <button class="btn-remove">✕</button></li>
+                        <li>Solicita reportes mensuales de actividad <button class="btn-remove">✕</button></li>
+                        <li>Presupuesto limitado a 50.000€ <button class="btn-remove">✕</button></li>
+                    </ul>
+                    <p class="hint">El personaje comparte estos elementos sin que el alumno deba esforzarse</p>
+                </div>
+
+                <div class="form-group">
+                    <label>¿Qué oculta o cuesta decir? (Información latente)</label>
+                    <div class="list-input">
+                        <input type="text" placeholder="Añade un elemento de información latente..." disabled>
+                        <button class="btn-add">+ Añadir</button>
+                    </div>
+                    <ul class="items-list">
+                        <li>Cortes de internet frecuentes — sistema offline <button class="btn-remove">✕</button></li>
+                        <li>Personal mayor de 50 años se resiste al cambio <button class="btn-remove">✕</button></li>
+                        <li>Sistema antiguo en COBOL que nadie quiere tocar <button class="btn-remove">✕</button></li>
+                    </ul>
+                    <p class="hint">El alumno debe descubrir esto con buenas preguntas</p>
+                </div>
+
+                <div class="form-group">
+                    <label>¿Cómo se comunica? (Comportamiento)</label>
+                    <textarea disabled>Cooperativo pero a veces evasivo. Usa anécdotas. Tiende a desviarse hacia temas operativos.</textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Tono emocional</label>
+                    <select disabled>
+                        <option>Tranquilo y receptivo</option>
+                        <option>Ansioso e impaciente</option>
+                        <option>Frustrado y escéptico</option>
+                        <option>Entusiasmado y abierto</option>
+                        <option>Reservado y formal</option>
+                    </select>
+                    <p class="hint">Estado emocional con el que el personaje inicia la conversación</p>
+                </div>
+
+                <div class="form-group">
+                    <label>Restricciones del personaje</label>
+                    <div class="list-input">
+                        <input type="text" placeholder="Añade una restricción..." disabled>
+                        <button class="btn-add">+ Añadir</button>
+                    </div>
+                    <ul class="items-list">
+                        <li>No revelar el presupuesto sin que se le pregunte explícitamente <button class="btn-remove">✕</button></li>
+                        <li>No mencionar nombres de proveedores específicos <button class="btn-remove">✕</button></li>
+                    </ul>
+                    <p class="hint">Reglas que el personaje no debe romper durante la simulación</p>
+                </div>
+            </div>
+
+            <div class="section-block">
+                <p class="section-header">Dificultad y Evaluación</p>
+
+                <div class="form-group">
+                    <label>Dificultad de la entrevista</label>
+                    <div class="difficulty-group">
+                        <div class="difficulty-option">
+                            <div class="level">Fácil</div>
+                            <div class="desc">Cooperativo, revela info con preguntas básicas</div>
+                        </div>
+                        <div class="difficulty-option selected">
+                            <div class="level">Medio</div>
+                            <div class="desc">Natural, requiere preguntas de seguimiento</div>
+                        </div>
+                        <div class="difficulty-option">
+                            <div class="level">Difícil</div>
+                            <div class="desc">Evasivo, info latente solo con preguntas específicas</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Criterios de evaluación</label>
+                    <div class="list-input">
+                        <input type="text" placeholder="Escribe un criterio..." disabled style="flex: 2;">
+                        <select disabled style="flex: 1; padding: 10px 12px; border: 2px solid #ddd; border-radius: 6px; font-size: 13px; background: #fafafa; color: #555;">
+                            <option>Técnica de preguntas</option>
+                            <option>Cobertura temática</option>
+                            <option>Descubrimiento de info latente</option>
+                            <option>Empatía y rapport</option>
+                            <option>Gestión del tiempo</option>
+                            <option>+ Nueva competencia</option>
+                        </select>
+                        <button class="btn-add">+ Añadir</button>
+                    </div>
+                    <ul class="items-list">
+                        <li style="flex-direction: column; align-items: flex-start; gap: 4px; position: relative;">
+                            <div style="width: 100%; padding-right: 24px;">Identifica la restricción de funcionamiento offline</div>
+                            <div style="font-size: 11px; color: #888; background: #e8e8e8; padding: 2px 8px; border-radius: 10px;">Cobertura temática</div>
+                            <button class="btn-remove" style="position: absolute; top: 8px; right: 8px;">✕</button>
+                        </li>
+                        <li style="flex-direction: column; align-items: flex-start; gap: 4px; position: relative;">
+                            <div style="width: 100%; padding-right: 24px;">Hace preguntas abiertas en momentos clave</div>
+                            <div style="font-size: 11px; color: #888; background: #e8e8e8; padding: 2px 8px; border-radius: 10px;">Técnica de preguntas</div>
+                            <button class="btn-remove" style="position: absolute; top: 8px; right: 8px;">✕</button>
+                        </li>
+                        <li style="flex-direction: column; align-items: flex-start; gap: 4px; position: relative;">
+                            <div style="width: 100%; padding-right: 24px;">Detecta la resistencia del personal al cambio</div>
+                            <div style="font-size: 11px; color: #888; background: #e8e8e8; padding: 2px 8px; border-radius: 10px;">Descubrimiento de info latente</div>
+                            <button class="btn-remove" style="position: absolute; top: 8px; right: 8px;">✕</button>
+                        </li>
+                    </ul>
+                    <p class="hint">Cada criterio se asocia a una competencia para una evaluación más rica del alumno</p>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button class="btn-secondary">← Atrás</button>
+                <button class="btn-primary">Crear Escenario</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
