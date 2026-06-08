@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WF-16: Simulación en Curso</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f0f0; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+        .wireframe-label { position: fixed; top: 10px; left: 10px; background: #333; color: #fff; padding: 6px 14px; border-radius: 4px; font-size: 12px; z-index: 100; }
+
+        /* Top bar minimal (no full header to maximize chat space) */
+        .top-bar { background: #fff; border-bottom: 2px solid #ccc; padding: 12px 24px; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
+        .scenario-info { display: flex; align-items: center; gap: 14px; }
+        .character-avatar { width: 44px; height: 44px; background: #e0e0e0; border: 2px dashed #aaa; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; color: #888; flex-shrink: 0; }
+        .character-meta h1 { font-size: 14px; color: #333; margin-bottom: 2px; }
+        .character-meta p { font-size: 11px; color: #888; }
+        .session-stats { display: flex; gap: 14px; }
+        .stat-pill { background: #f0f0f0; padding: 6px 12px; border-radius: 16px; font-size: 11px; color: #666; display: flex; align-items: center; gap: 6px; }
+        .stat-pill strong { color: #444; font-weight: 700; }
+        .top-actions { display: flex; gap: 8px; }
+        .btn-secondary { padding: 8px 14px; background: #fff; border: 1px solid #ccc; border-radius: 6px; font-size: 12px; color: #666; cursor: pointer; font-weight: 500; }
+        .btn-danger { padding: 8px 16px; background: #fff; border: 1px solid #c8a8a8; border-radius: 6px; font-size: 12px; color: #a55; cursor: pointer; font-weight: 600; }
+
+        /* Main chat area */
+        .chat-container { flex: 1; display: flex; overflow: hidden; }
+
+        /* Left: context panel (collapsible) */
+        .context-panel { width: 280px; background: #fff; border-right: 2px solid #ccc; padding: 20px; overflow-y: auto; flex-shrink: 0; }
+        .panel-section { margin-bottom: 22px; }
+        .panel-section h3 { font-size: 11px; color: #888; text-transform: uppercase; font-weight: 700; margin-bottom: 8px; letter-spacing: 0.5px; }
+        .panel-section p { font-size: 12px; color: #555; line-height: 1.5; }
+        .panel-section .objective-item { padding: 6px 10px; background: #f9f9f9; border: 1px solid #e8e8e8; border-radius: 5px; font-size: 11px; color: #555; margin-bottom: 5px; }
+        .difficulty-pill { display: inline-block; padding: 3px 10px; background: #e8e8e8; color: #666; border-radius: 10px; font-size: 11px; font-weight: 600; }
+
+        /* Center: chat */
+        .chat-main { flex: 1; display: flex; flex-direction: column; background: #fafafa; }
+        .messages { flex: 1; overflow-y: auto; padding: 24px 32px; }
+        .message-row { display: flex; gap: 12px; margin-bottom: 18px; }
+        .message-row.student { flex-direction: row-reverse; }
+        .msg-avatar { width: 34px; height: 34px; background: #e0e0e0; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 11px; color: #888; font-weight: 600; }
+        .msg-content { max-width: 65%; }
+        .message-row.student .msg-content { display: flex; flex-direction: column; align-items: flex-end; }
+        .msg-bubble { padding: 12px 16px; border-radius: 14px; font-size: 13px; line-height: 1.5; color: #444; }
+        .message-row.agent .msg-bubble { background: #fff; border: 1px solid #e0e0e0; border-top-left-radius: 4px; }
+        .message-row.student .msg-bubble { background: #d8d8d8; border: 1px solid #c8c8c8; border-top-right-radius: 4px; color: #333; }
+        .msg-time { font-size: 10px; color: #aaa; margin-top: 4px; padding: 0 8px; }
+        .msg-typing { display: flex; gap: 4px; padding: 14px 18px; }
+        .msg-typing span { width: 7px; height: 7px; background: #bbb; border-radius: 50%; }
+
+        /* Input area */
+        .input-area { background: #fff; border-top: 2px solid #ccc; padding: 16px 24px; flex-shrink: 0; }
+        .input-row { display: flex; gap: 10px; align-items: flex-end; }
+        .message-input { flex: 1; padding: 12px 16px; border: 2px solid #ddd; border-radius: 22px; font-size: 13px; background: #fafafa; color: #555; font-family: inherit; resize: none; min-height: 44px; max-height: 120px; }
+        .btn-send { width: 44px; height: 44px; background: #bbb; border: 2px solid #999; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 16px; font-weight: 700; flex-shrink: 0; }
+        .input-hint { font-size: 10px; color: #aaa; margin-top: 6px; text-align: center; }
+    </style>
+</head>
+<body>
+    <div class="wireframe-label">WF-16: Simulación en Curso (Chat) — CU-28, CU-29</div>
+
+    <!-- Top bar -->
+    <div class="top-bar">
+        <div class="scenario-info">
+            <div class="character-avatar">Avatar</div>
+            <div class="character-meta">
+                <h1>Director del Hospital Regional</h1>
+                <p>Entrevista con Director de Hospital · Ingeniería de Requisitos</p>
+            </div>
+        </div>
+        <div class="session-stats">
+            <div class="stat-pill">📨 <strong>12</strong> mensajes</div>
+            <div class="stat-pill">⏱ <strong>18:24</strong> transcurridos</div>
+        </div>
+        <div class="top-actions">
+            <button class="btn-secondary">Pausar y salir</button>
+            <button class="btn-danger">Finalizar sesión</button>
+        </div>
+    </div>
+
+    <!-- Main chat area -->
+    <div class="chat-container">
+        <!-- Left: Context panel -->
+        <div class="context-panel">
+            <div class="panel-section">
+                <h3>Contexto del escenario</h3>
+                <p>Un hospital regional necesita digitalizar su gestión de citas y expedientes médicos. El director ha solicitado una reunión para discutir las necesidades del centro.</p>
+            </div>
+
+            <div class="panel-section">
+                <h3>Tus objetivos</h3>
+                <div class="objective-item">Identificar requisitos funcionales</div>
+                <div class="objective-item">Detectar requisitos no verbalizados</div>
+                <div class="objective-item">Gestionar las expectativas del stakeholder</div>
+            </div>
+
+            <div class="panel-section">
+                <h3>Dificultad</h3>
+                <span class="difficulty-pill">Medio</span>
+            </div>
+        </div>
+
+        <!-- Center: Messages -->
+        <div class="chat-main">
+            <div class="messages">
+                <!-- Mensaje de bienvenida del personaje -->
+                <div class="message-row agent">
+                    <div class="msg-avatar">DR</div>
+                    <div class="msg-content">
+                        <div class="msg-bubble">
+                            Buenos días, gracias por venir. Como ya sabe, llevamos años intentando modernizar este hospital sin éxito. Espero que esta vez sea diferente. Dígame, ¿por dónde quiere empezar?
+                        </div>
+                        <div class="msg-time">10:32</div>
+                    </div>
+                </div>
+
+                <div class="message-row student">
+                    <div class="msg-avatar">MF</div>
+                    <div class="msg-content">
+                        <div class="msg-bubble">
+                            Buenos días. Me gustaría entender qué necesidades tiene el hospital actualmente. ¿Podría empezar contándome qué procesos les están dando más problemas?
+                        </div>
+                        <div class="msg-time">10:33</div>
+                    </div>
+                </div>
+
+                <div class="message-row agent">
+                    <div class="msg-avatar">DR</div>
+                    <div class="msg-content">
+                        <div class="msg-bubble">
+                            Pues mire, lo principal es la gestión de citas médicas. Tenemos un sistema en papel que ya no da abasto. También necesitamos un historial digital de pacientes y poder generar reportes mensuales de actividad para el ministerio.
+                        </div>
+                        <div class="msg-time">10:34</div>
+                    </div>
+                </div>
+
+                <div class="message-row student">
+                    <div class="msg-avatar">MF</div>
+                    <div class="msg-content">
+                        <div class="msg-bubble">
+                            Entiendo. ¿Hay algún presupuesto definido para este proyecto?
+                        </div>
+                        <div class="msg-time">10:36</div>
+                    </div>
+                </div>
+
+                <div class="message-row agent">
+                    <div class="msg-avatar">DR</div>
+                    <div class="msg-content">
+                        <div class="msg-bubble">
+                            Sí, contamos con 50.000€ aprobados por el ministerio. Aunque la verdad, después de los dos fracasos anteriores, estoy preocupado de que no sea suficiente. ¿Cree que es realista?
+                        </div>
+                        <div class="msg-time">10:37</div>
+                    </div>
+                </div>
+
+                <div class="message-row agent">
+                    <div class="msg-avatar">DR</div>
+                    <div class="msg-content">
+                        <div class="msg-typing">
+                            <span></span><span></span><span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Input area -->
+            <div class="input-area">
+                <div class="input-row">
+                    <textarea class="message-input" placeholder="Escribe tu mensaje al personaje..." disabled>Antes de responder al presupuesto, me gustaría preguntarle: ¿tienen actualmente algún problema con la conectividad a internet en el hospital?</textarea>
+                    <button class="btn-send">→</button>
+                </div>
+                <p class="input-hint">Pulsa Enter para enviar · Shift+Enter para nueva línea</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
