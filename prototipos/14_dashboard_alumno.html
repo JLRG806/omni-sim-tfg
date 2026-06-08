@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WF-14: Dashboard Alumno</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f0f0; min-height: 100vh; }
+        .wireframe-label { position: fixed; top: 10px; left: 10px; background: #333; color: #fff; padding: 6px 14px; border-radius: 4px; font-size: 12px; z-index: 100; }
+        .header { background: #fff; border-bottom: 2px solid #ccc; padding: 12px 24px; display: flex; justify-content: space-between; align-items: center; }
+        .header-left { display: flex; align-items: center; gap: 12px; }
+        .header-logo { width: 36px; height: 36px; background: #e0e0e0; border: 1px dashed #aaa; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 9px; color: #888; }
+        .header-title { font-size: 16px; font-weight: 700; color: #333; }
+        .header-right { display: flex; align-items: center; gap: 16px; }
+        .header-role { font-size: 12px; color: #888; background: #f0f0f0; padding: 4px 10px; border-radius: 4px; }
+        .header-user { font-size: 13px; color: #555; }
+        .btn-logout { padding: 6px 14px; background: #fff; border: 1px solid #ccc; border-radius: 4px; font-size: 12px; color: #888; cursor: pointer; }
+
+        .main { max-width: 980px; margin: 0 auto; padding: 24px; }
+        .welcome { margin-bottom: 24px; }
+        .welcome h1 { font-size: 22px; color: #333; margin-bottom: 4px; }
+        .welcome p { font-size: 13px; color: #888; }
+
+        .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 28px; }
+        .stat-card { background: #fff; border: 2px solid #ccc; border-radius: 8px; padding: 16px; text-align: center; }
+        .stat-value { font-size: 24px; font-weight: 700; color: #555; }
+        .stat-label { font-size: 11px; color: #888; text-transform: uppercase; margin-top: 4px; }
+
+        .section-title { font-size: 16px; font-weight: 600; color: #444; margin-bottom: 16px; }
+        .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+        .card { background: #fff; border: 2px solid #ccc; border-radius: 8px; padding: 20px; cursor: pointer; }
+        .card:hover { border-color: #aaa; }
+        .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+        .card-code { font-size: 11px; color: #888; background: #f0f0f0; padding: 3px 8px; border-radius: 4px; }
+        .card-title { font-size: 16px; font-weight: 600; color: #333; margin-bottom: 4px; }
+        .card-professor { font-size: 12px; color: #888; margin-bottom: 14px; }
+
+        .card-progress { padding-top: 12px; border-top: 1px solid #eee; }
+        .progress-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+        .progress-label { font-size: 11px; color: #888; }
+        .progress-value { font-size: 11px; color: #555; font-weight: 600; }
+        .progress-bar { height: 6px; background: #e8e8e8; border-radius: 3px; overflow: hidden; margin-bottom: 12px; }
+        .progress-fill { height: 100%; background: #aaa; }
+
+        .card-actions { display: flex; gap: 8px; }
+        .badge-pending { display: inline-block; padding: 3px 9px; border-radius: 12px; font-size: 11px; font-weight: 600; background: #f0e8d0; color: #806840; }
+        .badge-new { background: #e0e8e0; color: #506850; }
+    </style>
+</head>
+<body>
+    <div class="wireframe-label">WF-14: Dashboard Alumno — CU-25</div>
+
+    <div class="header">
+        <div class="header-left">
+            <div class="header-logo">Logo</div>
+            <span class="header-title">OmniSim</span>
+        </div>
+        <div class="header-right">
+            <span class="header-role">Alumno</span>
+            <span class="header-user">m.fernandez@universidad.edu</span>
+            <button class="btn-logout">Cerrar sesión</button>
+        </div>
+    </div>
+
+    <div class="main">
+        <div class="welcome">
+            <h1>Hola, María 👋</h1>
+            <p>Continúa practicando entrevistas con tus escenarios</p>
+        </div>
+
+        <div class="stats-row">
+            <div class="stat-card">
+                <div class="stat-value">15</div>
+                <div class="stat-label">Sesiones realizadas</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">2</div>
+                <div class="stat-label">En curso</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">7.8</div>
+                <div class="stat-label">Nota media</div>
+            </div>
+        </div>
+
+        <p class="section-title">Mis Asignaturas</p>
+
+        <div class="cards">
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <span class="card-code">INF-301</span>
+                    </div>
+                    <span class="badge-pending">2 escenarios nuevos</span>
+                </div>
+                <p class="card-title">Ingeniería de Requisitos</p>
+                <p class="card-professor">Prof. Juan García López</p>
+
+                <div class="card-progress">
+                    <div class="progress-row">
+                        <span class="progress-label">Progreso en escenarios</span>
+                        <span class="progress-value">3 / 5</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 60%;"></div>
+                    </div>
+                    <div class="progress-row">
+                        <span class="progress-label">Nota media</span>
+                        <span class="progress-value">8.2</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <span class="card-code">INF-405</span>
+                    </div>
+                </div>
+                <p class="card-title">Gestión de Proyectos</p>
+                <p class="card-professor">Prof. Juan García López</p>
+
+                <div class="card-progress">
+                    <div class="progress-row">
+                        <span class="progress-label">Progreso en escenarios</span>
+                        <span class="progress-value">2 / 3</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 66%;"></div>
+                    </div>
+                    <div class="progress-row">
+                        <span class="progress-label">Nota media</span>
+                        <span class="progress-value">7.4</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <span class="card-code">PSI-201</span>
+                    </div>
+                    <span class="badge-pending">1 en curso</span>
+                </div>
+                <p class="card-title">Psicología Clínica I</p>
+                <p class="card-professor">Prof. Laura Méndez Ruiz</p>
+
+                <div class="card-progress">
+                    <div class="progress-row">
+                        <span class="progress-label">Progreso en escenarios</span>
+                        <span class="progress-value">1 / 4</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 25%;"></div>
+                    </div>
+                    <div class="progress-row">
+                        <span class="progress-label">Nota media</span>
+                        <span class="progress-value">7.5</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
