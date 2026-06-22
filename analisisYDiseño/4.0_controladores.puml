@@ -1,0 +1,108 @@
+@startuml controladores
+skinparam {
+    ArrowColor #A80036
+    linetype polyline
+    Nodesep 20
+    Ranksep 18
+}
+
+skinparam package {
+    BackgroundColor #FEFECE
+    BorderColor #A80036
+    FontStyle bold
+}
+
+skinparam control {
+    BackgroundColor #C8E6A0
+    BorderColor #5C8C2A
+}
+
+top to bottom direction
+
+package "Controllers" {
+
+    ' Fila 1
+    control "loginController" as C01
+    control "logoutController" as C02
+    control "recuperarCuentaController" as C03
+
+    ' Fila 2
+    control "listarUsuariosController" as C04
+    control "crearUsuarioController" as C05
+    control "modificarUsuarioController" as C06
+
+    ' Fila 3
+    control "eliminarUsuarioController" as C07
+    control "buscarUsuarioController" as C08
+    control "listarAsignaturasController" as C09
+
+    ' Fila 4
+    control "crearAsignaturaController" as C10
+    control "modificarAsignaturaController" as C11
+    control "eliminarAsignaturaController" as C12
+
+    ' Fila 5
+    control "buscarAsignaturaController" as C13
+    control "navDashboardProfesorController" as C14
+    control "matricularAlumnoController" as C15
+
+    ' Fila 6
+    control "desmatricularAlumnoController" as C16
+    control "buscarAlumnoController" as C17
+    control "crearEscenarioController" as C18
+
+    ' Fila 7
+    control "editarEscenarioController" as C19
+    control "publicarEscenarioController" as C20
+    control "despublicarEscenarioController" as C21
+
+    ' Fila 8
+    control "buscarEscenarioController" as C22
+    control "revisarHistorialController" as C23
+    control "emitirCalificacionController" as C24
+
+    ' Fila 9
+    control "navDashboardAlumnoController" as C25
+    control "iniciarSimulacionController" as C26
+    control "retomarSimulacionController" as C27
+
+    ' Fila 10
+    control "enviarMensajeController" as C28
+    control "finalizarSesionController" as C29
+    control "consultarResultadosController" as C30
+
+    ' Filas (horizontales)
+    C01 -[hidden]r- C02
+    C02 -[hidden]r- C03
+    C04 -[hidden]r- C05
+    C05 -[hidden]r- C06
+    C07 -[hidden]r- C08
+    C08 -[hidden]r- C09
+    C10 -[hidden]r- C11
+    C11 -[hidden]r- C12
+    C13 -[hidden]r- C14
+    C14 -[hidden]r- C15
+    C16 -[hidden]r- C17
+    C17 -[hidden]r- C18
+    C19 -[hidden]r- C20
+    C20 -[hidden]r- C21
+    C22 -[hidden]r- C23
+    C23 -[hidden]r- C24
+    C25 -[hidden]r- C26
+    C26 -[hidden]r- C27
+    C28 -[hidden]r- C29
+    C29 -[hidden]r- C30
+
+    ' Columnas (verticales)
+    C01 -[hidden]d- C04
+    C04 -[hidden]d- C07
+    C07 -[hidden]d- C10
+    C10 -[hidden]d- C13
+    C13 -[hidden]d- C16
+    C16 -[hidden]d- C19
+    C19 -[hidden]d- C22
+    C22 -[hidden]d- C25
+    C25 -[hidden]d- C28
+}
+
+@enduml
