@@ -78,6 +78,19 @@ omni-sim-tfg/
 - **STI en `users`:** columna `rol` enum (`admin`/`profesor`/`alumno`). NO crear tablas separadas
 - **JSON columns** (no normalizar): `perfiles_agente.informacion_explicita`, `informacion_latente`, `restricciones`; `resultados.borrador_*` y `final_*`
 - **Tests:** Feature tests por CU en `tests/Feature/CU/CU01LoginTest.php`, etc.
+- **Comentarios PHP:** usar PHPDoc en clases, propiedades y métodos públicos/protegidos.
+  - Clases: `@property` para atributos, `@property-read` para relaciones virtuales.
+  - Métodos: `@param`, `@return` con tipos fully-qualified cuando no son obvios por la firma.
+  - Migraciones y Seeders: docblock de clase describiendo qué tabla/datos crea.
+  - Ejemplo:
+    ```php
+    /**
+     * Obtiene las asignaturas coordinadas por este profesor.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany<Asignatura>
+     */
+    public function asignaturas(): HasMany { ... }
+    ```
 
 ### Frontend (Vue)
 

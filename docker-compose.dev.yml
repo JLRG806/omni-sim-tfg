@@ -1,0 +1,93 @@
+services:
+  backend:
+    build:
+      context: ./docker/backend
+    volumes:
+      - ./backend:/var/www/html
+    ports:
+      - "8000:8000"
+    environment:
+      APP_ENV: local
+      APP_DEBUG: "true"
+      APP_URL: http://localhost
+      DB_CONNECTION: pgsql
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_DATABASE: omnisim
+      DB_USERNAME: omnisim
+      DB_PASSWORD: omnisim_secret
+      QUEUE_CONNECTION: database
+      SANCTUM_STATEFUL_DOMAINS: localhost,localhost:8081,localhost:5173
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - omnisim
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: ../docker/frontend/Dockerfile
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    ports:
+      - "5173:5173"
+    networks:
+      - omnisim
+
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: omnisim
+      POSTGRES_USER: omnisim
+      POSTGRES_PASSWORD: omnisim_secret
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U omnisim"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - omnisim
+
+  nginx:
+    image: nginx:1.25-alpine
+    ports:
+      - "8081:80"
+    volumes:
+      - ./docker/nginx/nginx.dev.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - backend
+      - frontend
+    networks:
+      - omnisim
+
+  n8n:
+    image: n8nio/n8n:latest
+    ports:
+      - "5678:5678"
+    environment:
+      N8N_HOST: "0.0.0.0"
+      N8N_PORT: "5678"
+      N8N_PROTOCOL: "http"
+      WEBHOOK_URL: "http://localhost:5678"
+      GENERIC_TIMEZONE: "Europe/Madrid"
+      N8N_BASIC_AUTH_ACTIVE: "true"
+      N8N_BASIC_AUTH_USER: "admin"
+      N8N_BASIC_AUTH_PASSWORD: "omnisim_n8n"
+    volumes:
+      - n8n_data:/home/node/.n8n
+    networks:
+      - omnisim
+
+networks:
+  omnisim:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  n8n_data:
