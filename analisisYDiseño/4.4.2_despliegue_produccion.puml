@@ -1,0 +1,85 @@
+@startuml despliegue_produccion
+skinparam {
+    ArrowColor #A80036
+    componentStyle uml2
+    linetype polyline
+    Nodesep 25
+    Ranksep 35
+}
+
+skinparam node {
+    BackgroundColor #F5F5F5
+    BorderColor #888888
+}
+
+skinparam component {
+    BackgroundColor #B3D9FF
+    BorderColor #2A5C9C
+}
+
+skinparam database {
+    BackgroundColor #FFD9A0
+    BorderColor #B07020
+}
+
+node "<<CLIENT>>\nDispositivo del usuario\n(navegador)" as Client {
+    component "Vue SPA\n(build estático)" as WebBrowser <<Executable>>
+}
+
+node "<<SERVER>>\nServidor de producción\n(omnisim.dominio.com)" as Server {
+
+    node "<<container>>\nomnisim-nginx\n:80, :443" as CNginx {
+        component "Nginx\n(TLS + proxy reverso)" as Nginx
+    }
+
+    node "Docker" as Docker {
+
+        node "<<container>>\nomnisim-frontend" as CFrontend {
+            component "Vue build\n(servido por Nginx)" as VueBuild
+        }
+
+        node "<<container>>\nomnisim-backend" as CBackend {
+            component "Laravel + PHP-FPM\nAPP_DEBUG=false" as Laravel
+        }
+
+        node "<<container>>\nomnisim-postgres" as CPostgres {
+            database "PostgreSQL 16\n(con backups)" as Postgres
+        }
+
+        node "<<container>>\nomnisim-n8n" as CN8n {
+            component "n8n workflows" as N8n
+        }
+
+        node "<<container>>\nomnisim-ollama\n(opcional)" as COllama {
+            component "Ollama\n(GPU)" as Ollama
+        }
+    }
+
+    folder "Volúmenes persistentes" as Vols {
+        component "postgres_data" as DBVol
+        component "n8n_data" as N8nVol
+        component "ollama_models" as OllamaVol
+    }
+}
+
+cloud "API IA externa\n(Groq / OpenRouter)\n[alternativa]" as ExternalIA
+
+' Conexiones públicas
+WebBrowser --> Nginx : HTTPS\n:443
+
+' Proxy interno
+Nginx --> VueBuild : assets estáticos
+Nginx --> Laravel : /api/* (proxy)
+
+' Conexiones internas
+Laravel --> Postgres : PDO\n:5432
+Laravel --> N8n : REST + Webhooks
+N8n --> Ollama : HTTP\n:11434
+N8n .down.> ExternalIA : alternativa\nsi no hay GPU
+
+' Volúmenes
+CPostgres ..> DBVol : persist
+CN8n ..> N8nVol : persist
+COllama ..> OllamaVol : persist
+
+@enduml
