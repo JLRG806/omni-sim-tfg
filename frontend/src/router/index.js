@@ -20,6 +20,13 @@ const router = createRouter({
       component: () => import('@/views/LoginView.vue'),
     },
 
+    // ── Transversal ───────────────────────────────────────────────────────────
+    {
+      path: '/recuperar-cuenta',
+      name: 'recuperarCuenta',
+      component: () => import('@/views/RecuperarCuentaView.vue'),
+    },
+
     // ── Admin ─────────────────────────────────────────────────────────────────
     {
       path: '/admin/usuarios',
