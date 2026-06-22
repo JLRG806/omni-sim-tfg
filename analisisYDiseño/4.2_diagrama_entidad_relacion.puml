@@ -1,0 +1,203 @@
+@startuml diagrama_entidad_relacion
+skinparam {
+    ArrowColor #A80036
+    linetype polyline
+    Nodesep 35
+    Ranksep 45
+}
+
+skinparam class {
+    BackgroundColor #FFD9A0
+    BorderColor #B07020
+    ArrowColor #A80036
+}
+
+hide circle
+hide methods
+
+entity users {
+    + id : bigint <<PK>>
+    --
+    name : varchar
+    email : varchar <<unique>>
+    password : varchar
+    rol : enum(admin, profesor, alumno)
+    estado : enum(activo, inactivo)
+    avatar_path : varchar <<nullable>>
+    email_verified_at : timestamp
+    created_at : timestamp
+    updated_at : timestamp
+    deleted_at : timestamp <<nullable>>
+}
+
+entity asignaturas {
+    + id : bigint <<PK>>
+    --
+    # profesor_id : bigint <<FK>>
+    codigo : varchar <<unique>>
+    nombre : varchar
+    descripcion : text
+    created_at : timestamp
+    updated_at : timestamp
+    deleted_at : timestamp <<nullable>>
+}
+
+entity matriculas {
+    + id : bigint <<PK>>
+    --
+    # alumno_id : bigint <<FK>>
+    # asignatura_id : bigint <<FK>>
+    fecha_matricula : date
+    created_at : timestamp
+    updated_at : timestamp
+}
+
+entity escenarios {
+    + id : bigint <<PK>>
+    --
+    # asignatura_id : bigint <<FK>>
+    # profesor_id : bigint <<FK>>
+    titulo : varchar
+    area_conocimiento : varchar
+    descripcion_situacion : text
+    estado : enum(borrador, publicado)
+    created_at : timestamp
+    updated_at : timestamp
+    deleted_at : timestamp <<nullable>>
+}
+
+entity objetivos_aprendizaje {
+    + id : bigint <<PK>>
+    --
+    # escenario_id : bigint <<FK>>
+    contenido : text
+    orden : int
+    created_at : timestamp
+    updated_at : timestamp
+}
+
+entity perfiles_agente {
+    + id : bigint <<PK>>
+    --
+    # escenario_id : bigint <<FK, unique>>
+    rol_identidad : text
+    trasfondo : text
+    conocimientos : text
+    mensaje_bienvenida : text
+    comportamiento : text
+    tono_emocional : enum
+    nivel_dificultad : enum(facil, medio, dificil)
+    avatar_path : varchar <<nullable>>
+    informacion_explicita : json
+    informacion_latente : json
+    restricciones : json
+    created_at : timestamp
+    updated_at : timestamp
+}
+
+entity competencias {
+    + id : bigint <<PK>>
+    --
+    # escenario_id : bigint <<FK, nullable>>
+    nombre : varchar
+    descripcion : text
+    tipo : enum(universal, personalizada)
+    created_at : timestamp
+    updated_at : timestamp
+}
+
+entity criterios_evaluacion {
+    + id : bigint <<PK>>
+    --
+    # perfil_agente_id : bigint <<FK>>
+    # competencia_id : bigint <<FK>>
+    contenido : text
+    created_at : timestamp
+    updated_at : timestamp
+}
+
+entity sesiones_simulacion {
+    + id : bigint <<PK>>
+    --
+    # alumno_id : bigint <<FK>>
+    # escenario_id : bigint <<FK>>
+    estado : enum(en_curso, pausada, procesando, finalizada, evaluada)
+    inicio_at : timestamp
+    finalizacion_at : timestamp <<nullable>>
+    created_at : timestamp
+    updated_at : timestamp
+    deleted_at : timestamp <<nullable>>
+}
+
+entity mensajes {
+    + id : bigint <<PK>>
+    --
+    # sesion_simulacion_id : bigint <<FK>>
+    emisor : enum(alumno, agente)
+    contenido : text
+    orden : int
+    created_at : timestamp
+}
+
+entity resultados {
+    + id : bigint <<PK>>
+    --
+    # sesion_simulacion_id : bigint <<FK, unique>>
+    estado : enum(pendiente, procesando, evaluado)
+    borrador_resumen : text <<nullable>>
+    borrador_mapa_descubrimiento : json <<nullable>>
+    borrador_competencias : json <<nullable>>
+    borrador_calificacion : decimal <<nullable>>
+    borrador_feedback : text <<nullable>>
+    borrador_generado_at : timestamp <<nullable>>
+    final_calificacion : decimal <<nullable>>
+    final_feedback : text <<nullable>>
+    final_competencias : json <<nullable>>
+    publicado_at : timestamp <<nullable>>
+    created_at : timestamp
+    updated_at : timestamp
+}
+
+' === Relaciones ===
+
+' Profesor coordina N Asignaturas
+users ||--o{ asignaturas : coordina
+
+' Alumno se matricula en N Asignaturas (N:M via matriculas)
+users ||--o{ matriculas
+asignaturas ||--o{ matriculas
+
+' Asignatura contiene N Escenarios
+asignaturas ||--o{ escenarios : contiene
+
+' Profesor diseña N Escenarios
+users ||--o{ escenarios : diseña
+
+' Escenario tiene 1 PerfilAgente
+escenarios ||--|| perfiles_agente : define
+
+' Escenario tiene N Objetivos
+escenarios ||--o{ objetivos_aprendizaje
+
+' Escenario puede tener N Competencias personalizadas
+escenarios ||--o{ competencias : personalizadas
+
+' PerfilAgente tiene N Criterios
+perfiles_agente ||--o{ criterios_evaluacion
+
+' Competencia se asocia a N Criterios
+competencias ||--o{ criterios_evaluacion
+
+' Alumno realiza N Sesiones
+users ||--o{ sesiones_simulacion : realiza
+
+' Escenario es base de N Sesiones
+escenarios ||--o{ sesiones_simulacion
+
+' Sesión registra N Mensajes
+sesiones_simulacion ||--o{ mensajes : registra
+
+' Sesión genera 1 Resultado
+sesiones_simulacion ||--|| resultados : genera
+
+@enduml
