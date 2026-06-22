@@ -1,0 +1,76 @@
+@startuml despliegue_local
+skinparam {
+    ArrowColor #A80036
+    componentStyle uml2
+    linetype polyline
+    Nodesep 25
+    Ranksep 35
+}
+
+skinparam node {
+    BackgroundColor #F5F5F5
+    BorderColor #888888
+}
+
+skinparam component {
+    BackgroundColor #B3D9FF
+    BorderColor #2A5C9C
+}
+
+skinparam database {
+    BackgroundColor #FFD9A0
+    BorderColor #B07020
+}
+
+node "<<CLIENT>>\nMáquina del desarrollador\n(navegador)" as Client {
+    component "Vue SPA\n(dev mode)" as WebBrowser <<Executable>>
+}
+
+node "<<DEV_MACHINE>>\nMáquina del desarrollador" as DevMachine {
+
+    node "Docker Desktop" as Docker {
+
+        node "<<container>>\nomnisim-frontend" as CFrontend {
+            component "Vite dev server\n:5173\n(hot reload)" as Vite
+        }
+
+        node "<<container>>\nomnisim-backend" as CBackend {
+            component "Laravel + PHP-FPM\n:8000\nAPP_DEBUG=true" as Laravel
+        }
+
+        node "<<container>>\nomnisim-postgres" as CPostgres {
+            database "PostgreSQL 16\n(seeders demo)" as Postgres
+        }
+
+        node "<<container>>\nomnisim-n8n" as CN8n {
+            component "n8n workflows" as N8n
+        }
+
+        node "<<container>>\nomnisim-ollama" as COllama {
+            component "Ollama\n(modelo ligero CPU)" as Ollama
+        }
+    }
+
+    folder "Volúmenes locales" as Vols {
+        component "código fuente\n(montaje hot reload)" as SourceVol
+        component "postgres_data" as DBVol
+        component "n8n_data" as N8nVol
+    }
+}
+
+' Conexiones cliente-servidor
+WebBrowser --> Vite : HTTP\n:5173
+WebBrowser --> Laravel : HTTP\n:8000 (API REST)
+
+' Conexiones internas
+Laravel --> Postgres : PDO\n:5432
+Laravel --> N8n : REST + Webhooks
+N8n --> Ollama : HTTP\n:11434
+
+' Volúmenes
+CFrontend ..> SourceVol : mount
+CBackend ..> SourceVol : mount
+CPostgres ..> DBVol : persist
+CN8n ..> N8nVol : persist
+
+@enduml
