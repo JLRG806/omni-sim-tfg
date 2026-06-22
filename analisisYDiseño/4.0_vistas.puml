@@ -1,0 +1,66 @@
+@startuml vistas
+skinparam {
+    ArrowColor #A80036
+    componentStyle uml2
+    linetype polyline
+    Nodesep 30
+    Ranksep 30
+}
+
+skinparam package {
+    BackgroundColor #FEFECE
+    BorderColor #A80036
+    FontStyle bold
+}
+
+skinparam component {
+    BackgroundColor #B3D9FF
+    BorderColor #2A5C9C
+}
+
+package "Views" {
+    component "LoginView" as LoginV
+    component "RecuperarCuentaView" as RecV
+    component "ModalConfirmacionView" as ModalV
+
+    component "DashboardAdminView" as DashAdmV
+    component "GestionUsuariosView" as GUsV
+    component "UsuarioFormView" as UFormV
+    component "GestionAsignaturasView" as GAsV
+    component "AsignaturaFormView" as AFormV
+
+    component "DashboardProfesorView" as DashPV
+    component "VistaAsignaturaProfesorView" as VAsigPV
+    component "CrearEscenarioFase1View" as Esc1V
+    component "CrearEscenarioFase2View" as Esc2V
+    component "EmitirCalificacionView" as EmCalV
+
+    component "DashboardAlumnoView" as DashAV
+    component "VistaAsignaturaAlumnoView" as VAsigAV
+    component "SimulacionChatView" as ChatV
+    component "ResultadosView" as ResV
+
+    ' Composición / navegación
+    LoginV --o RecV
+    DashAdmV --o GUsV
+    DashAdmV --o GAsV
+    GUsV --o UFormV
+    GAsV --o AFormV
+
+    DashPV --o VAsigPV
+    VAsigPV --o Esc1V
+    Esc1V --o Esc2V
+    VAsigPV --o EmCalV
+
+    DashAV --o VAsigAV
+    VAsigAV --o ChatV
+    VAsigAV --o ResV
+
+    ' Dependencias del componente reutilizable
+    GUsV ..> ModalV
+    GAsV ..> ModalV
+    VAsigPV ..> ModalV
+    ChatV ..> ModalV
+}
+
+@enduml
