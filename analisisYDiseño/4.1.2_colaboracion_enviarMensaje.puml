@@ -1,0 +1,38 @@
+@startuml colaboracion_enviarMensaje
+skinparam {
+    ArrowColor #A80036
+    componentStyle uml2
+    linetype polyline
+    Nodesep 40
+    Ranksep 50
+}
+
+skinparam component {
+    BackgroundColor<<view>> #B3D9FF
+    BorderColor<<view>> #2A5C9C
+
+    BackgroundColor<<ctrl>> #C8E6A0
+    BorderColor<<ctrl>> #5C8C2A
+
+    BackgroundColor<<model>> #FFD9A0
+    BorderColor<<model>> #B07020
+
+    BackgroundColor<<actor>> #F5F5F5
+    BorderColor<<actor>> #888888
+}
+
+component "Alumno" as Alum <<actor>>
+component "Orquestador IA" as IA <<actor>>
+
+component "SimulacionChatView" as CV <<view>>
+component "enviarMensajeController" as EMC <<ctrl>>
+component "SesionSimulacion" as MSes <<model>>
+
+Alum --> CV : 1: enviarMensaje(texto)
+CV --> EMC : 2: enviarMensaje(texto)
+EMC --> MSes : 3: registrarMensaje(texto, alumno)
+EMC --> IA : 4: solicitarRespuesta(contexto)
+EMC --> MSes : 5: registrarMensaje(respuesta, agente)
+EMC --> CV : 6: mostrar(respuesta)
+
+@enduml
