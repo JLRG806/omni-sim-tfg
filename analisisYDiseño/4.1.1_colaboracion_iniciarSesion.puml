@@ -1,0 +1,40 @@
+@startuml colaboracion_iniciarSesion
+skinparam {
+    ArrowColor #A80036
+    componentStyle uml2
+    linetype polyline
+    Nodesep 40
+    Ranksep 50
+}
+
+skinparam component {
+    BackgroundColor<<view>> #B3D9FF
+    BorderColor<<view>> #2A5C9C
+
+    BackgroundColor<<ctrl>> #C8E6A0
+    BorderColor<<ctrl>> #5C8C2A
+
+    BackgroundColor<<model>> #FFD9A0
+    BorderColor<<model>> #B07020
+
+    BackgroundColor<<collab>> #D0F0C0
+    BorderColor<<collab>> #6CA670
+
+    BackgroundColor<<actor>> #F5F5F5
+    BorderColor<<actor>> #888888
+}
+
+component "Usuario" as User <<actor>>
+component "LoginView" as LV <<view>>
+component "loginController" as LC <<ctrl>>
+component "Usuario" as MU <<model>>
+component ":Collaboration\nOpenDashboard" as COL <<collab>>
+
+User --> LV : 1: login(correo, password)
+LV --> LC : 2: login(correo, password)
+LC --> MU : 3: findByEmail(correo)
+LC --> MU : 4: verificarPassword(password)
+LC --> MU : 5: crearToken()
+LV --> COL : 6: abrirDashboard(rol)
+
+@enduml
