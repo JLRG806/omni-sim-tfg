@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
+import axios from 'axios'
 import api from '@/plugins/axios'
 
 /**
@@ -54,6 +55,44 @@ export const useAuthStore = defineStore('auth', () => {
     delete api.defaults.headers.common['Authorization']
   }
 
+  /**
+   * Autentica al usuario contra el backend (CU-01).
+   * Persiste el token y guarda los datos del usuario en el store.
+   *
+   * @param {string} email
+   * @param {string} password
+   * @returns {Promise<void>}
+   */
+  async function login(email, password) {
+    await axios.get('/sanctum/csrf-cookie', { withCredentials: true })
+    const { data } = await api.post('/auth/login', { email, password })
+    setToken(data.token)
+    user.value = data.user
+  }
+
+  /**
+   * Cierra la sesión activa en el backend y limpia el estado local (CU-02).
+   *
+   * @returns {Promise<void>}
+   */
+  /**
+   * Restaura la sesión completa (usuario) desde el backend usando el token
+   * almacenado en localStorage. Se llama al arrancar la SPA en main.js.
+   * Si el token ha expirado o es inválido, lanza un error para que main.js
+   * llame a limpiarSesion().
+   *
+   * @returns {Promise<void>}
+   */
+  async function restaurarSesion() {
+    const { data } = await api.get('/auth/me')
+    user.value = data.user
+  }
+
+  async function logout() {
+    await api.post('/auth/logout')
+    limpiarSesion()
+  }
+
   return {
     user,
     token,
@@ -61,6 +100,9 @@ export const useAuthStore = defineStore('auth', () => {
     rol,
     setToken,
     restaurarToken,
+    restaurarSesion,
     limpiarSesion,
+    login,
+    logout,
   }
 })

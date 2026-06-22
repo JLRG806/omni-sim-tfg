@@ -20,24 +20,52 @@ const router = createRouter({
       component: () => import('@/views/LoginView.vue'),
     },
 
-    // ── Rutas protegidas (se añaden por CU en días sucesivos) ─────────────────
-    // Ejemplo futuro:
-    // {
-    //   path: '/dashboard',
-    //   name: 'dashboard',
-    //   component: () => import('@/views/DashboardView.vue'),
-    //   meta: { requiresAuth: true },
-    // },
+    // ── Admin ─────────────────────────────────────────────────────────────────
+    {
+      path: '/admin/usuarios',
+      name: 'gestionUsuarios',
+      component: () => import('@/views/GestionUsuariosView.vue'),
+      meta: { requiresAuth: true, roles: ['admin'] },
+    },
+
+    // ── Profesor ──────────────────────────────────────────────────────────────
+    {
+      path: '/profesor/dashboard',
+      name: 'dashboardProfesor',
+      component: () => import('@/views/DashboardProfesorView.vue'),
+      meta: { requiresAuth: true, roles: ['profesor'] },
+    },
+
+    // ── Alumno ────────────────────────────────────────────────────────────────
+    {
+      path: '/alumno/dashboard',
+      name: 'dashboardAlumno',
+      component: () => import('@/views/DashboardAlumnoView.vue'),
+      meta: { requiresAuth: true, roles: ['alumno'] },
+    },
   ],
 })
 
 /**
  * Guard global: redirige al login si la ruta requiere autenticación
- * y el usuario no tiene token activo.
+ * o si el rol del usuario no está permitido en la ruta.
  */
+const rolRedirect = {
+  admin:    '/admin/usuarios',
+  profesor: '/profesor/dashboard',
+  alumno:   '/alumno/dashboard',
+}
+
 router.beforeEach((to) => {
   const auth = useAuthStore()
+
+  if (to.name === 'login' && auth.isAuthenticated) {
+    return { path: rolRedirect[auth.user.rol] ?? '/' }
+  }
   if (to.meta.requiresAuth && !auth.isAuthenticated) {
+    return { name: 'login' }
+  }
+  if (to.meta.roles && !to.meta.roles.includes(auth.user?.rol)) {
     return { name: 'login' }
   }
 })

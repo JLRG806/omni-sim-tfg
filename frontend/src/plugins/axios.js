@@ -26,7 +26,10 @@ const api = axios.create({
 api.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
+    // No redirigir en el endpoint de login — el 401 ahí significa credenciales
+    // inválidas y debe mostrarse al usuario, no causar una redirección.
+    const isAuthEndpoint = error.config?.url?.includes('/auth/')
+    if (error.response?.status === 401 && !isAuthEndpoint) {
       window.location.href = '/login'
     }
     return Promise.reject(error)

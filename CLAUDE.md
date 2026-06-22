@@ -16,7 +16,7 @@ TFG. Plataforma web SPA donde estudiantes practican entrevistas profesionales co
 | Estilos | Tailwind CSS | 3.x |
 | Estado | Pinia | 2.x |
 | HTTP | Axios | 1.x |
-| Backend | Laravel + PHP | 11.x / 8.2 |
+| Backend | Laravel + PHP | 11.x / 8.4 |
 | Auth | Laravel Sanctum | 4.x |
 | ORM | Eloquent | (Laravel) |
 | Cola async | Laravel Queue (Database driver) | (Laravel) |
