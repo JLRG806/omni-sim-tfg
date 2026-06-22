@@ -1,0 +1,68 @@
+@startuml modelos
+skinparam {
+    ArrowColor #A80036
+    componentStyle uml2
+    linetype polyline
+}
+
+skinparam package {
+    BackgroundColor #FEFECE
+    BorderColor #A80036
+    FontStyle bold
+}
+
+skinparam component {
+    BackgroundColor<<view>> #B3D9FF
+    BorderColor<<view>> #2A5C9C
+    BackgroundColor<<ctrl>> #C8E6A0
+    BorderColor<<ctrl>> #5C8C2A
+    BackgroundColor<<model>> #FFD9A0
+    BorderColor<<model>> #B07020
+}
+
+' =================== MODELS ===================
+package "Models" {
+    component "Usuario" as MUsr <<model>>
+    component "Administrador" as MAdm <<model>>
+    component "Profesor" as MProf <<model>>
+    component "Alumno" as MAlu <<model>>
+
+    component "Asignatura" as MAsig <<model>>
+    component "Matricula" as MMat <<model>>
+
+    component "Escenario" as MEsc <<model>>
+    component "PerfilAgente" as MPerf <<model>>
+    component "ObjetivoAprendizaje" as MObj <<model>>
+    component "CriterioEvaluacion" as MCri <<model>>
+    component "Competencia" as MComp <<model>>
+
+    component "SesionSimulacion" as MSes <<model>>
+    component "Mensaje" as MMsg <<model>>
+    component "Resultados" as MRes <<model>>
+
+    ' Herencia
+    MUsr <|-- MAdm
+    MUsr <|-- MProf
+    MUsr <|-- MAlu
+
+    ' Relaciones de dominio
+    MAdm --o MAsig : gestiona
+    MProf --o MAsig : coordina
+    MAlu --o MMat : matriculado
+    MMat o-- MAsig
+
+    MAsig *-- MEsc : contiene
+    MProf --o MEsc : diseña
+    MEsc *-- MPerf : define
+    MEsc *-- MObj : tiene
+    MPerf *-- MCri : evaluado por
+    MCri --o MComp : asociado a
+
+    MAlu --o MSes : realiza
+    MSes --o MEsc : se basa en
+    MSes *-- MMsg : registra
+    MSes *-- MRes : genera
+    MProf --o MRes : evalua
+}
+
+@enduml
