@@ -21,7 +21,10 @@ class logoutController extends Controller
      */
     public function __invoke(Request $request): JsonResponse
     {
-        $request->user()->currentAccessToken()->delete();
+        $accessToken = $request->user()->currentAccessToken();
+        $accessToken
+            ? $accessToken->delete()
+            : $request->user()->tokens()->delete();
 
         return response()->json(['message' => 'Sesión cerrada correctamente']);
     }

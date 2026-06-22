@@ -71,11 +71,6 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   /**
-   * Cierra la sesión activa en el backend y limpia el estado local (CU-02).
-   *
-   * @returns {Promise<void>}
-   */
-  /**
    * Restaura la sesión completa (usuario) desde el backend usando el token
    * almacenado en localStorage. Se llama al arrancar la SPA en main.js.
    * Si el token ha expirado o es inválido, lanza un error para que main.js
@@ -88,9 +83,19 @@ export const useAuthStore = defineStore('auth', () => {
     user.value = data.user
   }
 
+  /**
+   * Cierra la sesión activa en el backend y limpia el estado local (CU-02).
+   * limpiarSesion() se ejecuta siempre en el finally para evitar que un fallo
+   * de red deje al cliente en estado logueado con un token inválido.
+   *
+   * @returns {Promise<void>}
+   */
   async function logout() {
-    await api.post('/auth/logout')
-    limpiarSesion()
+    try {
+      await api.post('/auth/logout')
+    } finally {
+      limpiarSesion()
+    }
   }
 
   return {
