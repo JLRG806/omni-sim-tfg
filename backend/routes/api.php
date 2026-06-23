@@ -58,5 +58,8 @@ Route::prefix('v1')->group(function () {
         // CU-11 Modificar Asignatura
         Route::get('/asignaturas/{id}', \App\Http\Controllers\obtenerAsignaturaController::class);
         Route::put('/asignaturas/{id}', \App\Http\Controllers\modificarAsignaturaController::class);
+
+        // CU-12 Eliminar Asignatura
+        Route::delete('/asignaturas/{id}', \App\Http\Controllers\eliminarAsignaturaController::class);
     });
 });
