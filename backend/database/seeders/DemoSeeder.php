@@ -26,8 +26,7 @@ class DemoSeeder extends Seeder
      */
     public function run(): void
     {
-        // Desactivar foreign keys durante la siembra
-        DB::statement('SET session_replication_role = replica');
+        DB::transaction(function () {
 
         // ── Usuarios ────────────────────────────────────────────────────────
 
@@ -91,7 +90,7 @@ class DemoSeeder extends Seeder
             );
         }
 
-        DB::statement('SET session_replication_role = DEFAULT');
+        }); // fin DB::transaction
 
         $this->command->info('✅ DemoSeeder: 1 admin + 2 profesores + 5 alumnos + 3 asignaturas + 8 matrículas');
         $this->command->info('   Credenciales: *@omnisim.test / password');

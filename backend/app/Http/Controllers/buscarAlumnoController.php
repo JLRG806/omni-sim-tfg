@@ -29,7 +29,12 @@ class buscarAlumnoController extends Controller
     public function __invoke(Request $request, int $id): JsonResponse
     {
         $asignatura = Asignatura::findOrFail($id);
-        $q          = $request->query('q', '');
+
+        if ($asignatura->profesor_id !== $request->user()->id) {
+            return response()->json(['message' => 'No tiene permisos para ver alumnos de esta asignatura.'], 403);
+        }
+
+        $q = $request->query('q', '');
 
         $alumnosMatriculadosIds = $asignatura->matriculas()->pluck('alumno_id');
 

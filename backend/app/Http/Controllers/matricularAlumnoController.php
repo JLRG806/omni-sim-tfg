@@ -30,6 +30,10 @@ class matricularAlumnoController extends Controller
     {
         $asignatura = Asignatura::findOrFail($id);
 
+        if ($asignatura->profesor_id !== $request->user()->id) {
+            return response()->json(['message' => 'No tiene permisos para matricular alumnos en esta asignatura.'], 403);
+        }
+
         $matricula = Matricula::create([
             'alumno_id'       => $request->alumno_id,
             'asignatura_id'   => $asignatura->id,

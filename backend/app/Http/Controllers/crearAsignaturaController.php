@@ -39,7 +39,9 @@ class crearAsignaturaController extends Controller
                 'codigo'      => $asignatura->codigo,
                 'nombre'      => $asignatura->nombre,
                 'descripcion' => $asignatura->descripcion,
-                'profesor'    => ['id' => $asignatura->profesor->id, 'name' => $asignatura->profesor->name],
+                'profesor'    => $asignatura->profesor
+                    ? ['id' => $asignatura->profesor->id, 'name' => $asignatura->profesor->name]
+                    : null,
             ],
         ], 201);
     }

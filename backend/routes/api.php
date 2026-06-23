@@ -72,5 +72,8 @@ Route::prefix('v1')->group(function () {
         // CU-15 Matricular Alumno + CU-17 Buscar Alumno (incluido)
         Route::post('/asignaturas/{id}/matriculas', \App\Http\Controllers\matricularAlumnoController::class);
         Route::get('/asignaturas/{id}/alumnos',     \App\Http\Controllers\buscarAlumnoController::class);
+
+        // CU-16 Desmatricular Alumno
+        Route::delete('/matriculas/{id}', \App\Http\Controllers\desmatricularAlumnoController::class);
     });
 });
