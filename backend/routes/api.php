@@ -54,5 +54,9 @@ Route::prefix('v1')->group(function () {
 
         // CU-10 Crear Asignatura
         Route::post('/asignaturas', \App\Http\Controllers\crearAsignaturaController::class);
+
+        // CU-11 Modificar Asignatura
+        Route::get('/asignaturas/{id}', \App\Http\Controllers\obtenerAsignaturaController::class);
+        Route::put('/asignaturas/{id}', \App\Http\Controllers\modificarAsignaturaController::class);
     });
 });
