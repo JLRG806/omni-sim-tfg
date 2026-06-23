@@ -95,5 +95,8 @@ Route::prefix('v1')->group(function () {
         // CU-20 Publicar + CU-21 Despublicar
         Route::patch('/escenarios/{id}/publicar',     \App\Http\Controllers\publicarEscenarioController::class);
         Route::patch('/escenarios/{id}/despublicar',  \App\Http\Controllers\despublicarEscenarioController::class);
+
+        // CU-22 Buscar Escenario (por asignatura)
+        Route::get('/asignaturas/{id}/escenarios',    \App\Http\Controllers\buscarEscenarioController::class);
     });
 });
