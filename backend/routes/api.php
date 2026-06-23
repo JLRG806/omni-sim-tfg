@@ -121,5 +121,8 @@ Route::prefix('v1')->group(function () {
 
         // CU-28 Enviar Mensaje (síncrono con IA)
         Route::post('/sesiones/{id}/mensajes', \App\Http\Controllers\enviarMensajeController::class);
+
+        // CU-29 Finalizar Sesión (ASYNC — 202)
+        Route::patch('/sesiones/{id}/finalizar', \App\Http\Controllers\finalizarSesionController::class);
     });
 });
