@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 /**
  * Valida los datos de entrada para CU-06 Modificar Usuario.
@@ -24,11 +25,11 @@ class ModificarUsuarioRequest extends FormRequest
      */
     public function rules(): array
     {
-        $id = $this->route('id');
+        $id = (int) $this->route('id');
 
         return [
             'name'                  => ['required', 'string', 'max:255'],
-            'email'                 => ['required', 'email', "unique:users,email,{$id}"],
+            'email'                 => ['required', 'email', Rule::unique('users', 'email')->ignore($id)],
             'password'              => ['sometimes', 'nullable', 'string', 'min:8', 'confirmed'],
             'password_confirmation' => ['sometimes', 'nullable', 'string'],
             'rol'                   => ['required', 'in:admin,profesor,alumno'],

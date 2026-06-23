@@ -127,7 +127,7 @@
  * Modo crear: /admin/usuarios/nuevo (sin :id)
  * Modo editar: /admin/usuarios/:id/editar (con :id)
  */
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/authStore'
 import api from '@/plugins/axios'
@@ -151,7 +151,10 @@ const errors       = ref({})
 const errorGeneral = ref('')
 const loading      = ref(false)
 
-onMounted(async () => {
+async function init() {
+  form.value = { name: '', email: '', password: '', password_confirmation: '', rol: '', estado: 'activo' }
+  errors.value = {}
+  errorGeneral.value = ''
   if (esEdicion.value) {
     // CU-06: cargar datos del usuario a editar
     try {
@@ -161,11 +164,13 @@ onMounted(async () => {
       form.value.email  = u.email
       form.value.rol    = u.rol
       form.value.estado = u.estado
-    } catch {
+    } catch (e) {
       errorGeneral.value = 'No se pudo cargar el usuario'
     }
   }
-})
+}
+
+watch(() => route.params.id, () => init(), { immediate: true })
 
 async function guardar() {
   errors.value       = {}

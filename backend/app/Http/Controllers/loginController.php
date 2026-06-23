@@ -31,6 +31,10 @@ class loginController extends Controller
             ], 401);
         }
 
+        if ($user->estado === 'inactivo') {
+            return response()->json(['message' => 'Cuenta desactivada. Contacta con el administrador.'], 403);
+        }
+
         $token = $user->createToken('omnisim')->plainTextToken;
 
         return response()->json([

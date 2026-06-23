@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CrearUsuarioRequest;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Hash;
-
 /**
  * CU-05 Crear Usuario
  *
@@ -27,7 +25,7 @@ class crearUsuarioController extends Controller
         $usuario = User::create([
             'name'     => $request->name,
             'email'    => $request->email,
-            'password' => Hash::make($request->password),
+            'password' => $request->password,
             'rol'      => $request->rol,
             'estado'   => $request->estado ?? 'activo',
         ]);

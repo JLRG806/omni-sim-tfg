@@ -5,8 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ModificarUsuarioRequest;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Hash;
-
 /**
  * CU-06 Modificar Usuario
  *
@@ -35,7 +33,7 @@ class modificarUsuarioController extends Controller
         ];
 
         if ($request->filled('password')) {
-            $datos['password'] = Hash::make($request->password);
+            $datos['password'] = $request->password;
         }
 
         $usuario->update($datos);

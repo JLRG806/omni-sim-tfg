@@ -1,6 +1,14 @@
 <template>
   <div class="min-h-screen bg-gray-50 flex flex-col">
 
+    <ModalConfirmacion
+      :visible="modalVisible"
+      titulo="Eliminar usuario"
+      :mensaje="`¿Eliminar a ${usuarioAEliminar?.name}? Esta acción no se puede deshacer.`"
+      @confirmar="eliminar"
+      @cancelar="modalVisible = false"
+    />
+
     <!-- Header -->
     <header class="bg-white border-b border-gray-200 px-6 py-3 flex items-center justify-between">
       <div class="flex items-center gap-3">
@@ -138,22 +146,23 @@
 
 <script setup>
 /**
- * GestionUsuariosView — CU-04 Listar Usuarios + CU-08 Buscar Usuario.
- * Punto de entrada del módulo de administración de usuarios.
- * Las acciones Editar (CU-06) y Eliminar (CU-07) se implementan en sus CUs.
+ * GestionUsuariosView — CU-04 Listar Usuarios + CU-07 Eliminar + CU-08 Buscar.
  */
 import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/authStore'
 import api from '@/plugins/axios'
+import ModalConfirmacion from '@/components/ModalConfirmacion.vue'
 
 const router  = useRouter()
 const auth    = useAuthStore()
 
-const usuarios = ref([])
-const busqueda = ref('')
-const loading  = ref(false)
-const error    = ref('')
+const usuarios         = ref([])
+const busqueda         = ref('')
+const loading          = ref(false)
+const error            = ref('')
+const modalVisible     = ref(false)
+const usuarioAEliminar = ref(null)
 
 async function cargarUsuarios(q = '') {
   loading.value = true
@@ -174,8 +183,20 @@ function buscar() {
 }
 
 function confirmarEliminar(usuario) {
-  // CU-07 — implementación pendiente
-  alert(`Eliminar ${usuario.name} — CU-07 pendiente`)
+  usuarioAEliminar.value = usuario
+  modalVisible.value     = true
+}
+
+async function eliminar() {
+  modalVisible.value = false
+  try {
+    await api.delete(`/usuarios/${usuarioAEliminar.value.id}`)
+    await cargarUsuarios(busqueda.value)
+  } catch (e) {
+    error.value = 'Error al eliminar el usuario'
+  } finally {
+    usuarioAEliminar.value = null
+  }
 }
 
 async function handleLogout() {
