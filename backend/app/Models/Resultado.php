@@ -61,6 +61,8 @@ class Resultado extends Model
             'final_competencias'            => 'array',
             'borrador_generado_at'          => 'datetime',
             'publicado_at'                  => 'datetime',
+            'borrador_calificacion'         => 'float',
+            'final_calificacion'            => 'float',
         ];
     }
 

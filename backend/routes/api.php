@@ -101,5 +101,9 @@ Route::prefix('v1')->group(function () {
 
         // CU-23 Revisar Historial (incluido por CU-24)
         Route::get('/sesiones',                       \App\Http\Controllers\revisarHistorialController::class);
+
+        // CU-24 Emitir Calificación (incluye CU-23)
+        Route::get('/resultados/{id}',                [\App\Http\Controllers\emitirCalificacionController::class, 'cargar']);
+        Route::post('/resultados/{id}/publicar',      [\App\Http\Controllers\emitirCalificacionController::class, 'publicar']);
     });
 });

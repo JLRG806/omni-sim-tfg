@@ -99,6 +99,13 @@ const router = createRouter({
       meta: { requiresAuth: true, roles: ['profesor'] },
     },
 
+    {
+      path: '/profesor/resultados/:id',
+      name: 'emitirCalificacion',
+      component: () => import('@/views/EmitirCalificacionView.vue'),
+      meta: { requiresAuth: true, roles: ['profesor'] },
+    },
+
     // ── Alumno ────────────────────────────────────────────────────────────────
     {
       path: '/alumno/dashboard',

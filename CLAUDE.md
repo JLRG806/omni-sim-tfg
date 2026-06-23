@@ -237,6 +237,45 @@ Cuando trabajes en un CU, consulta antes:
 
 ---
 
+## Contratos de Modelos — referencia rápida (ver detalle en `docs/CONTRATOS_MODELOS.md`)
+
+### Tablas NO estándar (siempre tienen `$table` explícita)
+```
+ObjetivoAprendizaje → objetivos_aprendizaje
+PerfilAgente        → perfiles_agente
+CriterioEvaluacion  → criterios_evaluacion
+SesionSimulacion    → sesiones_simulacion
+```
+
+### ENUMs críticos
+```
+User.rol:              admin | profesor | alumno
+User.estado:           activo | inactivo
+Escenario.estado:      borrador | publicado
+SesionSimulacion.estado: en_curso | pausada | procesando | finalizada | evaluada
+Resultado.estado:      pendiente | procesando | evaluado
+Mensaje.emisor:        alumno | agente
+PerfilAgente.tono_emocional: formal | amigable | empatico | serio | distante
+PerfilAgente.nivel_dificultad: facil | medio | dificil
+```
+
+### Relaciones — métodos EXACTOS (errores frecuentes)
+```php
+// ⚠️ En Resultado y Mensaje: la relación es sesion(), NO sesionSimulacion()
+$resultado->sesion        // ✅ BelongsTo → SesionSimulacion
+$resultado->sesionSimulacion // ❌ NO EXISTE
+
+// FK columns no estándar
+Matricula::alumno_id       → users (rol=alumno)
+SesionSimulacion::alumno_id → users (rol=alumno)
+PerfilAgente::criterios()  → CriterioEvaluacion (FK: perfil_agente_id)
+Escenario::objetivos()     → orderBy('orden')
+Escenario::sesiones()      → SesionSimulacion
+SesionSimulacion::mensajes() → orderBy('orden')
+```
+
+---
+
 ## Lo que NO hacer
 
 - ❌ NO usar Redis (decisión cerrada)
