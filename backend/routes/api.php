@@ -49,8 +49,8 @@ Route::prefix('v1')->group(function () {
         Route::delete('/usuarios/{id}', \App\Http\Controllers\eliminarUsuarioController::class);
 
         // ── Asignaturas ───────────────────────────────────────────────────────
-        // CU-09 Listar Asignaturas + CU-13 Buscar Asignatura (se unificarán en CU-13)
-        Route::get('/asignaturas', \App\Http\Controllers\listarAsignaturasController::class);
+        // CU-09 Listar Asignaturas + CU-13 Buscar Asignatura
+        Route::get('/asignaturas', \App\Http\Controllers\buscarAsignaturaController::class);
 
         // CU-10 Crear Asignatura
         Route::post('/asignaturas', \App\Http\Controllers\crearAsignaturaController::class);
