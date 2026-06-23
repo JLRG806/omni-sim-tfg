@@ -31,4 +31,11 @@ Route::prefix('v1')->group(function () {
         // CU-02 Cerrar Sesión
         Route::post('/auth/logout', \App\Http\Controllers\logoutController::class);
     });
+
+    // ── Admin ─────────────────────────────────────────────────────────────────
+    Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
+
+        // CU-04 Listar Usuarios
+        Route::get('/usuarios', \App\Http\Controllers\listarUsuariosController::class);
+    });
 });
