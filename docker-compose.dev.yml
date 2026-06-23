@@ -66,6 +66,27 @@ services:
     networks:
       - omnisim
 
+  queue:
+    build:
+      context: ./docker/backend
+    volumes:
+      - ./backend:/var/www/html
+    command: ["php", "artisan", "queue:work", "--sleep=3", "--tries=3", "--max-time=3600"]
+    environment:
+      APP_ENV: local
+      DB_CONNECTION: pgsql
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_DATABASE: omnisim
+      DB_USERNAME: omnisim
+      DB_PASSWORD: omnisim_secret
+      QUEUE_CONNECTION: database
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - omnisim
+
   n8n:
     image: n8nio/n8n:latest
     ports:
