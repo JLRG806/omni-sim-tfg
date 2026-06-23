@@ -26,6 +26,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class SesionSimulacion extends Model
 {
+    /** La tabla no sigue la convención de pluralización de Laravel. */
+    protected $table = 'sesiones_simulacion';
+
     use SoftDeletes;
 
     /**

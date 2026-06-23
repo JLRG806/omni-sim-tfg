@@ -29,6 +29,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 class PerfilAgente extends Model
 {
+    /** La tabla no sigue la convención de pluralización de Laravel. */
+    protected $table = 'perfiles_agente';
+
     /**
      * @var list<string>
      */

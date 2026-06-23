@@ -75,5 +75,16 @@ Route::prefix('v1')->group(function () {
 
         // CU-16 Desmatricular Alumno
         Route::delete('/matriculas/{id}', \App\Http\Controllers\desmatricularAlumnoController::class);
+
+        // Competencias disponibles para criterios de evaluación
+        Route::get('/competencias', function () {
+            return response()->json([
+                'data' => \App\Models\Competencia::orderBy('nombre')->get(['id', 'nombre', 'descripcion', 'tipo']),
+            ]);
+        });
+
+        // CU-18 Crear Escenario (dos fases)
+        Route::post('/escenarios',              [\App\Http\Controllers\crearEscenarioController::class, 'fase1']);
+        Route::post('/escenarios/{id}/perfil',  [\App\Http\Controllers\crearEscenarioController::class, 'fase2']);
     });
 });

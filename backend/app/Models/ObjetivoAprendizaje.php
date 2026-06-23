@@ -17,6 +17,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class ObjetivoAprendizaje extends Model
 {
+    /** La tabla no sigue la convención de pluralización de Laravel. */
+    protected $table = 'objetivos_aprendizaje';
+
     /**
      * @var list<string>
      */

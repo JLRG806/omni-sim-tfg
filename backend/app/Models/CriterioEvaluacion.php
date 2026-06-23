@@ -18,6 +18,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class CriterioEvaluacion extends Model
 {
+    /** La tabla no sigue la convención de pluralización de Laravel. */
+    protected $table = 'criterios_evaluacion';
+
     /**
      * @var list<string>
      */

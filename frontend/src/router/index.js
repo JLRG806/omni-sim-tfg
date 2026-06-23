@@ -80,6 +80,18 @@ const router = createRouter({
       component: () => import('@/views/VistaAsignaturaProfesorView.vue'),
       meta: { requiresAuth: true, roles: ['profesor'] },
     },
+    {
+      path: '/profesor/escenarios/nuevo',
+      name: 'crearEscenarioFase1',
+      component: () => import('@/views/CrearEscenarioFase1View.vue'),
+      meta: { requiresAuth: true, roles: ['profesor'] },
+    },
+    {
+      path: '/profesor/escenarios/:id/perfil',
+      name: 'crearEscenarioFase2',
+      component: () => import('@/views/CrearEscenarioFase2View.vue'),
+      meta: { requiresAuth: true, roles: ['profesor'] },
+    },
 
     // ── Alumno ────────────────────────────────────────────────────────────────
     {
