@@ -91,5 +91,9 @@ Route::prefix('v1')->group(function () {
         Route::get('/escenarios/{id}',          \App\Http\Controllers\obtenerEscenarioController::class);
         Route::put('/escenarios/{id}',          [\App\Http\Controllers\editarEscenarioController::class, 'fase1']);
         Route::put('/escenarios/{id}/perfil',   [\App\Http\Controllers\editarEscenarioController::class, 'fase2']);
+
+        // CU-20 Publicar + CU-21 Despublicar
+        Route::patch('/escenarios/{id}/publicar',     \App\Http\Controllers\publicarEscenarioController::class);
+        Route::patch('/escenarios/{id}/despublicar',  \App\Http\Controllers\despublicarEscenarioController::class);
     });
 });
