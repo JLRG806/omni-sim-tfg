@@ -62,4 +62,11 @@ Route::prefix('v1')->group(function () {
         // CU-12 Eliminar Asignatura
         Route::delete('/asignaturas/{id}', \App\Http\Controllers\eliminarAsignaturaController::class);
     });
+
+    // ── Profesor ──────────────────────────────────────────────────────────────
+    Route::middleware(['auth:sanctum', 'role:profesor'])->group(function () {
+
+        // CU-14 Nav Dashboard Profesor
+        Route::get('/profesor/dashboard', \App\Http\Controllers\navDashboardProfesorController::class);
+    });
 });

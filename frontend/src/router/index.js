@@ -74,6 +74,13 @@ const router = createRouter({
       meta: { requiresAuth: true, roles: ['profesor'] },
     },
 
+    {
+      path: '/profesor/asignaturas/:id',
+      name: 'vistaAsignaturaProfesor',
+      component: () => import('@/views/VistaAsignaturaProfesorView.vue'),
+      meta: { requiresAuth: true, roles: ['profesor'] },
+    },
+
     // ── Alumno ────────────────────────────────────────────────────────────────
     {
       path: '/alumno/dashboard',
