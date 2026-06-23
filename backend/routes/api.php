@@ -106,4 +106,11 @@ Route::prefix('v1')->group(function () {
         Route::get('/resultados/{id}',                [\App\Http\Controllers\emitirCalificacionController::class, 'cargar']);
         Route::post('/resultados/{id}/publicar',      [\App\Http\Controllers\emitirCalificacionController::class, 'publicar']);
     });
+
+    // ── Alumno ────────────────────────────────────────────────────────────────
+    Route::middleware(['auth:sanctum', 'role:alumno'])->group(function () {
+
+        // CU-25 Nav Dashboard Alumno
+        Route::get('/alumno/dashboard', \App\Http\Controllers\navDashboardAlumnoController::class);
+    });
 });
