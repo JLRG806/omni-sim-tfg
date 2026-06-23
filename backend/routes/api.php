@@ -98,5 +98,8 @@ Route::prefix('v1')->group(function () {
 
         // CU-22 Buscar Escenario (por asignatura)
         Route::get('/asignaturas/{id}/escenarios',    \App\Http\Controllers\buscarEscenarioController::class);
+
+        // CU-23 Revisar Historial (incluido por CU-24)
+        Route::get('/sesiones',                       \App\Http\Controllers\revisarHistorialController::class);
     });
 });
