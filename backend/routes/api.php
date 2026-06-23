@@ -35,8 +35,8 @@ Route::prefix('v1')->group(function () {
     // ── Admin ─────────────────────────────────────────────────────────────────
     Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
 
-        // CU-04 Listar Usuarios
-        Route::get('/usuarios', \App\Http\Controllers\listarUsuariosController::class);
+        // CU-04 Listar Usuarios + CU-08 Buscar Usuario
+        Route::get('/usuarios', \App\Http\Controllers\buscarUsuarioController::class);
 
         // CU-05 Crear Usuario
         Route::post('/usuarios', \App\Http\Controllers\crearUsuarioController::class);
