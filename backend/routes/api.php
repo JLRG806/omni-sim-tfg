@@ -115,5 +115,8 @@ Route::prefix('v1')->group(function () {
 
         // CU-26 Iniciar Simulación
         Route::post('/sesiones', \App\Http\Controllers\iniciarSimulacionController::class);
+
+        // CU-27 Retomar Simulación
+        Route::patch('/sesiones/{id}/retomar', \App\Http\Controllers\retomarSimulacionController::class);
     });
 });
