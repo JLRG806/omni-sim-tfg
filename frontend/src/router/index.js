@@ -47,6 +47,25 @@ const router = createRouter({
       meta: { requiresAuth: true, roles: ['admin'] },
     },
 
+    {
+      path: '/admin/asignaturas',
+      name: 'gestionAsignaturas',
+      component: () => import('@/views/GestionAsignaturasView.vue'),
+      meta: { requiresAuth: true, roles: ['admin'] },
+    },
+    {
+      path: '/admin/asignaturas/nueva',
+      name: 'crearAsignatura',
+      component: () => import('@/views/AsignaturaFormView.vue'),
+      meta: { requiresAuth: true, roles: ['admin'] },
+    },
+    {
+      path: '/admin/asignaturas/:id/editar',
+      name: 'editarAsignatura',
+      component: () => import('@/views/AsignaturaFormView.vue'),
+      meta: { requiresAuth: true, roles: ['admin'] },
+    },
+
     // ── Profesor ──────────────────────────────────────────────────────────────
     {
       path: '/profesor/dashboard',

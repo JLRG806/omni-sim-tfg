@@ -47,5 +47,9 @@ Route::prefix('v1')->group(function () {
 
         // CU-07 Eliminar Usuario
         Route::delete('/usuarios/{id}', \App\Http\Controllers\eliminarUsuarioController::class);
+
+        // ── Asignaturas ───────────────────────────────────────────────────────
+        // CU-09 Listar Asignaturas + CU-13 Buscar Asignatura (se unificarán en CU-13)
+        Route::get('/asignaturas', \App\Http\Controllers\listarAsignaturasController::class);
     });
 });
