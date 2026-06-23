@@ -37,5 +37,8 @@ Route::prefix('v1')->group(function () {
 
         // CU-04 Listar Usuarios
         Route::get('/usuarios', \App\Http\Controllers\listarUsuariosController::class);
+
+        // CU-05 Crear Usuario
+        Route::post('/usuarios', \App\Http\Controllers\crearUsuarioController::class);
     });
 });

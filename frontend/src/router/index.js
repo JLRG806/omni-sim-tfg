@@ -34,6 +34,18 @@ const router = createRouter({
       component: () => import('@/views/GestionUsuariosView.vue'),
       meta: { requiresAuth: true, roles: ['admin'] },
     },
+    {
+      path: '/admin/usuarios/nuevo',
+      name: 'crearUsuario',
+      component: () => import('@/views/UsuarioFormView.vue'),
+      meta: { requiresAuth: true, roles: ['admin'] },
+    },
+    {
+      path: '/admin/usuarios/:id/editar',
+      name: 'editarUsuario',
+      component: () => import('@/views/UsuarioFormView.vue'),
+      meta: { requiresAuth: true, roles: ['admin'] },
+    },
 
     // ── Profesor ──────────────────────────────────────────────────────────────
     {
