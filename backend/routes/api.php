@@ -40,5 +40,15 @@ Route::prefix('v1')->group(function () {
 
         // CU-05 Crear Usuario
         Route::post('/usuarios', \App\Http\Controllers\crearUsuarioController::class);
+
+        // CU-06 Modificar Usuario (GET /{id} necesario para cargar el formulario de edición)
+        Route::get('/usuarios/{id}', function (int $id) {
+            $u = \App\Models\User::findOrFail($id);
+            return response()->json(['data' => [
+                'id' => $u->id, 'name' => $u->name,
+                'email' => $u->email, 'rol' => $u->rol, 'estado' => $u->estado,
+            ]]);
+        });
+        Route::put('/usuarios/{id}', \App\Http\Controllers\modificarUsuarioController::class);
     });
 });
