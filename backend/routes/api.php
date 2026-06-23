@@ -124,5 +124,8 @@ Route::prefix('v1')->group(function () {
 
         // CU-29 Finalizar Sesión (ASYNC — 202)
         Route::patch('/sesiones/{id}/finalizar', \App\Http\Controllers\finalizarSesionController::class);
+
+        // CU-30 Consultar Resultados (alumno ve su nota publicada)
+        Route::get('/sesiones/{sesion_id}/resultado', \App\Http\Controllers\consultarResultadosController::class);
     });
 });

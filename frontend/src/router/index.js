@@ -125,6 +125,12 @@ const router = createRouter({
       component: () => import('@/views/SimulacionChatView.vue'),
       meta: { requiresAuth: true, roles: ['alumno'] },
     },
+    {
+      path: '/alumno/sesiones/:sesionId/resultado',
+      name: 'resultados',
+      component: () => import('@/views/ResultadosView.vue'),
+      meta: { requiresAuth: true, roles: ['alumno'] },
+    },
   ],
 })
 
