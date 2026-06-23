@@ -225,7 +225,9 @@ async function guardar() {
   errorGeneral.value = ''
   loading.value      = true
   try {
-    await api.post(`/escenarios/${escenarioId}/perfil`, {
+    // POST = crear (CU-18), PUT = editar (CU-19)
+    const method = route.query.modo === 'editar' ? 'put' : 'post'
+    await api[method](`/escenarios/${escenarioId}/perfil`, {
       ...form.value,
       informacion_explicita: form.value.informacion_explicita.filter(s => s.trim()),
       informacion_latente:   form.value.informacion_latente.filter(s => s.trim()),

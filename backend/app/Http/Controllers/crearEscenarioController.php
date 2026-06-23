@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Concerns\UsaDificultadPrompt;
 use App\Http\Requests\CrearEscenarioFase1Request;
 use App\Http\Requests\CrearEscenarioFase2Request;
 use App\Models\CriterioEvaluacion;
@@ -19,28 +20,7 @@ use Illuminate\Support\Facades\DB;
  */
 class crearEscenarioController extends Controller
 {
-    /**
-     * Instrucciones de prompt según nivel de dificultad.
-     *
-     * @var array<string, array<string>>
-     */
-    private const RESTRICCIONES_DIFICULTAD = [
-        'facil'  => [
-            'Sé cooperativo y comparte información con facilidad.',
-            'Revela información latente con preguntas básicas.',
-            'Muéstrate dispuesto a colaborar con el entrevistador.',
-        ],
-        'medio'  => [
-            'Compórtate de forma natural y profesional.',
-            'Solo revela información latente ante buenas preguntas de seguimiento.',
-            'Sé selectivo con lo que compartes espontáneamente.',
-        ],
-        'dificil' => [
-            'Sé evasivo y da respuestas vagas cuando sea posible.',
-            'Revela información latente únicamente ante preguntas muy específicas y directas.',
-            'Crea cierta resistencia natural al compartir información sensible.',
-        ],
-    ];
+    use UsaDificultadPrompt;
 
     /**
      * Fase 1 — Crea el escenario base y sus objetivos de aprendizaje.

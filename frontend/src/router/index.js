@@ -87,6 +87,12 @@ const router = createRouter({
       meta: { requiresAuth: true, roles: ['profesor'] },
     },
     {
+      path: '/profesor/escenarios/:id/editar',
+      name: 'editarEscenarioFase1',
+      component: () => import('@/views/CrearEscenarioFase1View.vue'),
+      meta: { requiresAuth: true, roles: ['profesor'] },
+    },
+    {
       path: '/profesor/escenarios/:id/perfil',
       name: 'crearEscenarioFase2',
       component: () => import('@/views/CrearEscenarioFase2View.vue'),

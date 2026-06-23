@@ -86,5 +86,10 @@ Route::prefix('v1')->group(function () {
         // CU-18 Crear Escenario (dos fases)
         Route::post('/escenarios',              [\App\Http\Controllers\crearEscenarioController::class, 'fase1']);
         Route::post('/escenarios/{id}/perfil',  [\App\Http\Controllers\crearEscenarioController::class, 'fase2']);
+
+        // CU-19 Editar Escenario (dos fases, solo borrador)
+        Route::get('/escenarios/{id}',          \App\Http\Controllers\obtenerEscenarioController::class);
+        Route::put('/escenarios/{id}',          [\App\Http\Controllers\editarEscenarioController::class, 'fase1']);
+        Route::put('/escenarios/{id}/perfil',   [\App\Http\Controllers\editarEscenarioController::class, 'fase2']);
     });
 });

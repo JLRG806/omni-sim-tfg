@@ -97,7 +97,7 @@
  * Recibe asignatura_id via query param (?asignatura_id=X).
  * Al guardar, redirige a CrearEscenarioFase2View con el escenario_id.
  */
-import { ref } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '@/stores/authStore'
 import { useEscenarioStore } from '@/stores/escenarioStore'
@@ -109,6 +109,7 @@ const auth     = useAuthStore()
 const escStore = useEscenarioStore()
 
 const asignaturaId = ref(Number(route.query.asignatura_id) || null)
+const esEdicion    = computed(() => !!route.params.id)
 
 const form = ref({
   titulo:                '',
@@ -120,6 +121,24 @@ const form = ref({
 const errors       = ref({})
 const errorGeneral = ref('')
 const loading      = ref(false)
+
+onMounted(async () => {
+  if (esEdicion.value) {
+    try {
+      const { data } = await api.get(`/escenarios/${route.params.id}`)
+      const esc = data.data
+      asignaturaId.value = escStore.asignaturaId
+      form.value.titulo                = esc.titulo
+      form.value.area_conocimiento     = esc.area_conocimiento
+      form.value.descripcion_situacion = esc.descripcion_situacion
+      form.value.objetivos             = esc.objetivos.length
+        ? esc.objetivos
+        : [{ contenido: '', orden: 1 }]
+    } catch (e) {
+      errorGeneral.value = 'No se pudieron cargar los datos del escenario'
+    }
+  }
+})
 
 function añadirObjetivo() {
   form.value.objetivos.push({ contenido: '', orden: form.value.objetivos.length + 1 })
@@ -136,15 +155,22 @@ async function siguiente() {
   loading.value      = true
   try {
     const payload = {
-      asignatura_id:         asignaturaId.value,
       titulo:                form.value.titulo,
       area_conocimiento:     form.value.area_conocimiento,
       descripcion_situacion: form.value.descripcion_situacion,
       objetivos:             form.value.objetivos.filter(o => o.contenido.trim()),
     }
-    const { data } = await api.post('/escenarios', payload)
-    escStore.setEscenario(data.escenario_id, asignaturaId.value)
-    router.push(`/profesor/escenarios/${data.escenario_id}/perfil`)
+
+    let escenarioId
+    if (esEdicion.value) {
+      const { data } = await api.put(`/escenarios/${route.params.id}`, payload)
+      escenarioId = data.escenario_id
+    } else {
+      const { data } = await api.post('/escenarios', { ...payload, asignatura_id: asignaturaId.value })
+      escenarioId = data.escenario_id
+      escStore.setEscenario(escenarioId, asignaturaId.value)
+    }
+    router.push(`/profesor/escenarios/${escenarioId}/perfil${esEdicion.value ? '?modo=editar' : ''}`)
   } catch (e) {
     if (e.response?.status === 422) errors.value = e.response.data.errors ?? {}
     else errorGeneral.value = e.response?.data?.message ?? 'Error al guardar el escenario'
