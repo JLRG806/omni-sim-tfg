@@ -118,5 +118,8 @@ Route::prefix('v1')->group(function () {
 
         // CU-27 Retomar Simulación
         Route::patch('/sesiones/{id}/retomar', \App\Http\Controllers\retomarSimulacionController::class);
+
+        // CU-28 Enviar Mensaje (síncrono con IA)
+        Route::post('/sesiones/{id}/mensajes', \App\Http\Controllers\enviarMensajeController::class);
     });
 });
