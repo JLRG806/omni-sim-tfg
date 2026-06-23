@@ -30,7 +30,7 @@ class ModificarAsignaturaRequest extends FormRequest
         return [
             'codigo'      => ['required', 'string', 'max:20', Rule::unique('asignaturas', 'codigo')->ignore($id)],
             'nombre'      => ['required', 'string', 'max:255'],
-            'descripcion' => ['sometimes', 'string', 'max:1000'],
+            'descripcion' => ['sometimes', 'nullable', 'string', 'max:1000'],
             'profesor_id' => ['required', Rule::exists('users', 'id')->where('rol', 'profesor')->whereNull('deleted_at')],
         ];
     }

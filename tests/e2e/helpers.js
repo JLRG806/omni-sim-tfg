@@ -16,9 +16,11 @@ const fs   = require('fs')
 const BASE = 'http://localhost:8081'
 
 const CREDS = {
-  admin:    { email: 'admin@omnisim.test',    password: 'password' },
-  profesor: { email: 'profesor@omnisim.test', password: 'password' },
-  alumno:   { email: 'alumno@omnisim.test',   password: 'password' },
+  admin:    { email: 'admin@omnisim.test',  password: 'password' },
+  profesor: { email: 'garcia@omnisim.test', password: 'password' },
+  profesor2: { email: 'lopez@omnisim.test', password: 'password' },
+  alumno:   { email: 'ana@omnisim.test',    password: 'password' },
+  alumno2:  { email: 'carlos@omnisim.test', password: 'password' },
 }
 
 /**

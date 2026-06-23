@@ -68,5 +68,9 @@ Route::prefix('v1')->group(function () {
 
         // CU-14 Nav Dashboard Profesor
         Route::get('/profesor/dashboard', \App\Http\Controllers\navDashboardProfesorController::class);
+
+        // CU-15 Matricular Alumno + CU-17 Buscar Alumno (incluido)
+        Route::post('/asignaturas/{id}/matriculas', \App\Http\Controllers\matricularAlumnoController::class);
+        Route::get('/asignaturas/{id}/alumnos',     \App\Http\Controllers\buscarAlumnoController::class);
     });
 });
