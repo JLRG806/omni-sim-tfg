@@ -112,5 +112,8 @@ Route::prefix('v1')->group(function () {
 
         // CU-25 Nav Dashboard Alumno
         Route::get('/alumno/dashboard', \App\Http\Controllers\navDashboardAlumnoController::class);
+
+        // CU-26 Iniciar Simulación
+        Route::post('/sesiones', \App\Http\Controllers\iniciarSimulacionController::class);
     });
 });
