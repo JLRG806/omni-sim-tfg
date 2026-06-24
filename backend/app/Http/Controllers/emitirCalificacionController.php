@@ -6,6 +6,7 @@ use App\Http\Requests\EmitirCalificacionRequest;
 use App\Models\Resultado;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 /**
  * CU-24 Emitir Calificación  (incluye CU-23 Revisar Historial)
@@ -58,7 +59,10 @@ class emitirCalificacionController extends Controller
             ],
             'sesion' => [
                 'id'      => $sesion->id,
-                'alumno'  => ['id' => $sesion->alumno->id, 'name' => $sesion->alumno->name],
+                'alumno'  => [
+                    'id'   => $sesion->alumno?->id,
+                    'name' => $sesion->alumno?->name ?? 'Alumno eliminado',
+                ],
                 'escenario' => ['id' => $sesion->escenario->id, 'titulo' => $sesion->escenario->titulo],
                 'mensajes' => $sesion->mensajes->map(fn ($m) => [
                     'id'         => $m->id,
@@ -95,15 +99,16 @@ class emitirCalificacionController extends Controller
             return response()->json(['message' => 'El borrador de la IA aún no está disponible.'], 422);
         }
 
-        $resultado->update([
-            'final_calificacion' => $request->final_calificacion,
-            'final_feedback'     => $request->final_feedback,
-            'final_competencias' => $request->final_competencias,
-            'estado'             => 'evaluado',
-            'publicado_at'      => now(),
-        ]);
-
-        $sesion->update(['estado' => 'evaluada']);
+        DB::transaction(function () use ($resultado, $sesion, $request) {
+            $resultado->update([
+                'final_calificacion' => $request->final_calificacion,
+                'final_feedback'     => $request->final_feedback,
+                'final_competencias' => $request->final_competencias,
+                'estado'             => 'evaluado',
+                'publicado_at'       => now(),
+            ]);
+            $sesion->update(['estado' => 'evaluada']);
+        });
 
         return response()->json([
             'message'    => 'Calificación publicada correctamente.',

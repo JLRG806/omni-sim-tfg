@@ -7,6 +7,7 @@ use App\Models\Mensaje;
 use App\Models\SesionSimulacion;
 use App\Services\OrquestadorIAInterface;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
 
 /**
  * CU-28 Enviar Mensaje (síncrono con IA)
@@ -52,26 +53,30 @@ class enviarMensajeController extends Controller
             return response()->json(['message' => "No se puede enviar mensajes en una sesión con estado '{$sesion->estado}'."], 422);
         }
 
-        $orden = $sesion->mensajes->count() + 1;
+        // 1. Guardar mensaje del alumno — orden recalculado desde BD en transacción
+        $mensajeAlumno = DB::transaction(function () use ($sesion, $request) {
+            $orden = (Mensaje::where('sesion_simulacion_id', $sesion->id)->max('orden') ?? 0) + 1;
+            return Mensaje::create([
+                'sesion_simulacion_id' => $sesion->id,
+                'emisor'               => 'alumno',
+                'contenido'            => $request->texto,
+                'orden'                => $orden,
+            ]);
+        });
 
-        // 1. Guardar mensaje del alumno
-        $mensajeAlumno = Mensaje::create([
-            'sesion_simulacion_id' => $sesion->id,
-            'emisor'               => 'alumno',
-            'contenido'            => $request->texto,
-            'orden'                => $orden,
-        ]);
-
-        // 2. Llamar al orquestador IA (bloqueante)
+        // 2. Llamar al orquestador IA (bloqueante — fuera de la transacción)
         $respuestaTexto = $this->orquestador->solicitarRespuesta($sesion, $request->texto);
 
-        // 3. Guardar respuesta del agente
-        $mensajeAgente = Mensaje::create([
-            'sesion_simulacion_id' => $sesion->id,
-            'emisor'               => 'agente',
-            'contenido'            => $respuestaTexto,
-            'orden'                => $orden + 1,
-        ]);
+        // 3. Guardar respuesta del agente — orden recalculado desde BD en transacción
+        $mensajeAgente = DB::transaction(function () use ($sesion, $respuestaTexto) {
+            $orden = (Mensaje::where('sesion_simulacion_id', $sesion->id)->max('orden') ?? 0) + 1;
+            return Mensaje::create([
+                'sesion_simulacion_id' => $sesion->id,
+                'emisor'               => 'agente',
+                'contenido'            => $respuestaTexto,
+                'orden'                => $orden,
+            ]);
+        });
 
         return response()->json([
             'mensajes' => [

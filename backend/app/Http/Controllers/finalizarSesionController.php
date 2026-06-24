@@ -7,6 +7,7 @@ use App\Models\Resultado;
 use App\Models\SesionSimulacion;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 /**
  * CU-29 Finalizar Sesión (ASÍNCRONO — devuelve 202)
@@ -43,17 +44,17 @@ class finalizarSesionController extends Controller
             return response()->json(['message' => "No se puede finalizar una sesión en estado '{$sesion->estado}'."], 422);
         }
 
-        $sesion->update([
-            'estado'          => 'procesando',
-            'finalizacion_at' => now(),
-        ]);
-
-        Resultado::firstOrCreate(
-            ['sesion_simulacion_id' => $sesion->id],
-            ['estado' => 'pendiente']
-        );
-
-        GenerarBorradorIAJob::dispatch($sesion->id);
+        DB::transaction(function () use ($sesion) {
+            $sesion->update([
+                'estado'          => 'procesando',
+                'finalizacion_at' => now(),
+            ]);
+            Resultado::firstOrCreate(
+                ['sesion_simulacion_id' => $sesion->id],
+                ['estado' => 'pendiente']
+            );
+            GenerarBorradorIAJob::dispatch($sesion->id)->afterCommit();
+        });
 
         return response()->json([
             'message'   => 'Sesión finalizada. La evaluación se generará en breve.',

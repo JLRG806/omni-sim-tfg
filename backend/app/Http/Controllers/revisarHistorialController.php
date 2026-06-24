@@ -53,7 +53,11 @@ class revisarHistorialController extends Controller
             ],
             'sesiones' => $sesiones->map(fn ($s) => [
                 'id'              => $s->id,
-                'alumno'          => ['id' => $s->alumno->id, 'name' => $s->alumno->name, 'email' => $s->alumno->email],
+                'alumno'          => [
+                    'id'    => $s->alumno?->id,
+                    'name'  => $s->alumno?->name  ?? 'Alumno eliminado',
+                    'email' => $s->alumno?->email ?? '',
+                ],
                 'estado'          => $s->estado,
                 'inicio_at'       => $s->inicio_at?->toISOString(),
                 'finalizacion_at' => $s->finalizacion_at?->toISOString(),

@@ -12,7 +12,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * Sesión de simulación realizada por un alumno sobre un escenario.
  *
  * Ciclo de vida del estado:
- *   en_curso → pausada (opcional) → finalizada → procesando (CU-29 asíncrono) → evaluada
+ *   en_curso → pausada (opcional) → procesando (CU-29 asíncrono) → finalizada → evaluada
  *
  * @property int         $id
  * @property int         $alumno_id

@@ -213,6 +213,25 @@ onMounted(async () => {
   try {
     const { data } = await api.get('/competencias')
     competencias.value = data.data
+
+    if (route.query.modo === 'editar') {
+      const { data: esc } = await api.get(`/escenarios/${escenarioId}`)
+      const p = esc.data?.perfil
+      if (p) {
+        form.value.rol_identidad         = p.rol_identidad        ?? ''
+        form.value.trasfondo             = p.trasfondo            ?? ''
+        form.value.conocimientos         = p.conocimientos        ?? ''
+        form.value.mensaje_bienvenida    = p.mensaje_bienvenida   ?? ''
+        form.value.comportamiento        = p.comportamiento       ?? ''
+        form.value.tono_emocional        = p.tono_emocional       ?? ''
+        form.value.nivel_dificultad      = p.nivel_dificultad     ?? ''
+        form.value.informacion_explicita = p.informacion_explicita?.length ? p.informacion_explicita : ['']
+        form.value.informacion_latente   = p.informacion_latente?.length   ? p.informacion_latente   : ['']
+        form.value.criterios_evaluacion  = p.criterios_evaluacion?.length
+          ? p.criterios_evaluacion
+          : [{ competencia_id: '', contenido: '' }]
+      }
+    }
   } catch {
     competencias.value = []
   } finally {
@@ -233,9 +252,10 @@ async function guardar() {
       informacion_latente:   form.value.informacion_latente.filter(s => s.trim()),
       criterios_evaluacion:  form.value.criterios_evaluacion.filter(c => c.competencia_id && c.contenido.trim()),
     })
+    const asignaturaId = escStore.asignaturaId
     escStore.limpiar()
-    router.push(escStore.asignaturaId
-      ? `/profesor/asignaturas/${escStore.asignaturaId}`
+    router.push(asignaturaId
+      ? `/profesor/asignaturas/${asignaturaId}`
       : '/profesor/dashboard')
   } catch (e) {
     if (e.response?.status === 422) errors.value = e.response.data.errors ?? {}

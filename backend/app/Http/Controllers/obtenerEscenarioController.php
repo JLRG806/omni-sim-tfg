@@ -38,6 +38,7 @@ class obtenerEscenarioController extends Controller
         return response()->json([
             'data' => [
                 'id'                    => $escenario->id,
+                'asignatura_id'         => $escenario->asignatura_id,
                 'titulo'                => $escenario->titulo,
                 'area_conocimiento'     => $escenario->area_conocimiento,
                 'descripcion_situacion' => $escenario->descripcion_situacion,

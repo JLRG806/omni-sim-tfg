@@ -38,11 +38,11 @@ class navDashboardAlumnoController extends Controller
 
         return response()->json([
             'alumno'      => ['id' => $alumno->id, 'name' => $alumno->name],
-            'asignaturas' => $matriculas->map(fn ($m) => [
+            'asignaturas' => $matriculas->filter(fn ($m) => $m->asignatura !== null)->map(fn ($m) => [
                 'id'              => $m->asignatura->id,
                 'codigo'          => $m->asignatura->codigo,
                 'nombre'          => $m->asignatura->nombre,
-                'profesor'        => ['id' => $m->asignatura->profesor->id, 'name' => $m->asignatura->profesor->name],
+                'profesor'        => ['id' => $m->asignatura->profesor?->id, 'name' => $m->asignatura->profesor?->name ?? 'Profesor eliminado'],
                 'fecha_matricula' => $m->fecha_matricula,
                 'escenarios'      => $m->asignatura->escenarios->map(fn ($e) => [
                     'id'                    => $e->id,
@@ -50,7 +50,7 @@ class navDashboardAlumnoController extends Controller
                     'area_conocimiento'     => $e->area_conocimiento,
                     'descripcion_situacion' => $e->descripcion_situacion,
                 ])->values(),
-            ]),
+            ])->values(),
         ]);
     }
 }
