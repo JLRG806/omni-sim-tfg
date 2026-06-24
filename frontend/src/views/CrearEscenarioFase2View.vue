@@ -58,10 +58,19 @@
         </div>
 
         <div class="mb-5">
-          <label class="block text-xs font-semibold text-gray-600 mb-1">Primer mensaje (bienvenida)</label>
-          <input v-model="form.mensaje_bienvenida" type="text" placeholder="Buenos días, tengo cita con usted."
-            class="w-full px-3 py-2.5 border-2 rounded-lg text-sm bg-gray-50 focus:outline-none focus:border-blue-400"
+          <div class="flex items-center justify-between mb-1">
+            <label class="text-xs font-semibold text-gray-600">Primer mensaje (bienvenida)</label>
+            <button type="button" disabled
+              class="text-xs border border-gray-200 px-2 py-1 rounded text-gray-300 cursor-not-allowed"
+              title="Disponible cuando n8n esté configurado">
+              Sugerir con IA (próximamente)
+            </button>
+          </div>
+          <textarea v-model="form.mensaje_bienvenida" rows="2"
+            placeholder="Ej: Buenos días, tengo cita con usted..."
+            class="w-full px-3 py-2.5 border-2 rounded-lg text-sm bg-gray-50 focus:outline-none focus:border-blue-400 resize-none"
             :class="errors.mensaje_bienvenida ? 'border-red-400' : 'border-gray-200'" />
+          <p class="text-xs text-gray-400 mt-1 italic">Cómo abrirá la conversación el personaje al iniciar la simulación</p>
         </div>
 
         <div class="mb-5">
@@ -71,29 +80,48 @@
             :class="errors.comportamiento ? 'border-red-400' : 'border-gray-200'" />
         </div>
 
-        <div class="flex gap-4 mb-5">
-          <div class="flex-1">
-            <label class="block text-xs font-semibold text-gray-600 mb-1">Tono emocional</label>
-            <select v-model="form.tono_emocional"
-              class="w-full px-3 py-2.5 border-2 border-gray-200 rounded-lg text-sm bg-gray-50 focus:outline-none focus:border-blue-400">
-              <option value="">Seleccionar…</option>
-              <option value="formal">Formal</option>
-              <option value="amigable">Amigable</option>
-              <option value="empatico">Empático</option>
-              <option value="serio">Serio</option>
-              <option value="distante">Distante</option>
-            </select>
+        <div class="mb-5">
+          <label class="block text-xs font-semibold text-gray-600 mb-1">Tono emocional</label>
+          <select v-model="form.tono_emocional"
+            class="w-full px-3 py-2.5 border-2 border-gray-200 rounded-lg text-sm bg-gray-50 focus:outline-none focus:border-blue-400">
+            <option value="">Seleccionar…</option>
+            <option value="formal">Formal</option>
+            <option value="amigable">Amigable</option>
+            <option value="empatico">Empático</option>
+            <option value="serio">Serio</option>
+            <option value="distante">Distante</option>
+          </select>
+        </div>
+
+        <!-- Restricciones -->
+        <div class="mb-5">
+          <div class="flex items-center justify-between mb-2">
+            <label class="text-xs font-semibold text-gray-600">Restricciones del personaje</label>
+            <button @click="añadir('restricciones')" type="button" class="text-xs text-blue-600 hover:underline">+ Añadir</button>
           </div>
-          <div class="flex-1">
-            <label class="block text-xs font-semibold text-gray-600 mb-1">Dificultad</label>
-            <select v-model="form.nivel_dificultad"
-              class="w-full px-3 py-2.5 border-2 border-gray-200 rounded-lg text-sm bg-gray-50 focus:outline-none focus:border-blue-400">
-              <option value="">Seleccionar…</option>
-              <option value="facil">Fácil — cooperativo</option>
-              <option value="medio">Medio — natural</option>
-              <option value="dificil">Difícil — evasivo</option>
-            </select>
+          <div v-for="(item, i) in form.restricciones" :key="'res'+i" class="flex gap-2 mb-2">
+            <input v-model="form.restricciones[i]" type="text" :placeholder="`Ej: No revelar el presupuesto sin que se le pregunte`"
+              class="flex-1 px-3 py-2 border-2 border-gray-200 rounded-lg text-sm bg-gray-50 focus:outline-none focus:border-blue-400" />
+            <button v-if="form.restricciones.length > 1" @click="quitar('restricciones', i)" type="button" class="text-gray-400 hover:text-red-500 text-lg px-1">×</button>
           </div>
+          <p class="text-xs text-gray-400 italic">Reglas que el personaje no debe romper durante la simulación</p>
+        </div>
+
+        <!-- Dificultad — 3 cards clickables -->
+        <div class="mb-5">
+          <label class="block text-xs font-semibold text-gray-600 mb-2">Dificultad de la entrevista</label>
+          <div class="grid grid-cols-3 gap-3">
+            <button v-for="op in dificultades" :key="op.valor" type="button"
+              @click="form.nivel_dificultad = op.valor"
+              :class="['p-3 border-2 rounded-lg text-center transition-colors',
+                form.nivel_dificultad === op.valor
+                  ? 'border-gray-600 bg-gray-100'
+                  : 'border-gray-200 bg-gray-50 hover:border-gray-300']">
+              <div class="text-sm font-bold text-gray-700 mb-1">{{ op.label }}</div>
+              <div class="text-xs text-gray-400">{{ op.desc }}</div>
+            </button>
+          </div>
+          <p v-if="errors.nivel_dificultad" class="text-xs text-red-500 mt-1">{{ errors.nivel_dificultad[0] }}</p>
         </div>
 
         <!-- Información explícita -->
@@ -187,6 +215,7 @@ const form = ref({
   nivel_dificultad:     '',
   informacion_explicita: [''],
   informacion_latente:   [''],
+  restricciones:         [''],
   criterios_evaluacion:  [{ competencia_id: '', contenido: '' }],
 })
 
@@ -195,6 +224,12 @@ const loadingCompetencias = ref(true)
 const errors              = ref({})
 const errorGeneral        = ref('')
 const loading             = ref(false)
+
+const dificultades = [
+  { valor: 'facil',   label: 'Fácil',   desc: 'Cooperativo, revela info con preguntas básicas' },
+  { valor: 'medio',   label: 'Medio',   desc: 'Natural, requiere preguntas de seguimiento' },
+  { valor: 'dificil', label: 'Difícil', desc: 'Evasivo, info latente solo con preguntas específicas' },
+]
 
 function añadir(campo) {
   form.value[campo].push('')
@@ -227,6 +262,7 @@ onMounted(async () => {
         form.value.nivel_dificultad      = p.nivel_dificultad     ?? ''
         form.value.informacion_explicita = p.informacion_explicita?.length ? p.informacion_explicita : ['']
         form.value.informacion_latente   = p.informacion_latente?.length   ? p.informacion_latente   : ['']
+        form.value.restricciones         = p.restricciones?.length         ? p.restricciones         : ['']
         form.value.criterios_evaluacion  = p.criterios_evaluacion?.length
           ? p.criterios_evaluacion
           : [{ competencia_id: '', contenido: '' }]
@@ -250,6 +286,7 @@ async function guardar() {
       ...form.value,
       informacion_explicita: form.value.informacion_explicita.filter(s => s.trim()),
       informacion_latente:   form.value.informacion_latente.filter(s => s.trim()),
+      restricciones:         form.value.restricciones.filter(s => s.trim()),
       criterios_evaluacion:  form.value.criterios_evaluacion.filter(c => c.competencia_id && c.contenido.trim()),
     })
     const asignaturaId = escStore.asignaturaId
