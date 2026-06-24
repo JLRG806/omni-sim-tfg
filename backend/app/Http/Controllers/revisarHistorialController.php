@@ -40,7 +40,7 @@ class revisarHistorialController extends Controller
             return response()->json(['message' => 'No tiene permisos para ver el historial de este escenario.'], 403);
         }
 
-        $sesiones = SesionSimulacion::with(['alumno:id,name,email', 'mensajes'])
+        $sesiones = SesionSimulacion::with(['alumno:id,name,email', 'mensajes', 'resultado'])
             ->where('escenario_id', $escenarioId)
             ->where('tipo', 'real')
             ->orderByDesc('inicio_at')
@@ -63,6 +63,9 @@ class revisarHistorialController extends Controller
                 'inicio_at'       => $s->inicio_at?->toISOString(),
                 'finalizacion_at' => $s->finalizacion_at?->toISOString(),
                 'num_mensajes'    => $s->mensajes->count(),
+                // resultado_id necesario para navegar a EmitirCalificacionView
+                'resultado_id'    => $s->resultado?->id,
+                'resultado_nota'  => $s->resultado?->final_calificacion,
             ]),
         ]);
     }

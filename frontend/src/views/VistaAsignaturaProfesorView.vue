@@ -379,7 +379,8 @@ async function cargarEvaluaciones() {
         sesiones.push({
           ...s,
           escenario_titulo: esc.titulo,
-          nota: s.resultado_nota ?? null,
+          nota:        s.resultado_nota  ?? null,
+          resultado_id: s.resultado_id   ?? null,
         })
       }
     }
@@ -425,9 +426,10 @@ function formatFecha(iso) {
   return d.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' })
 }
 async function irACalificar(s) {
-  // Navega al resultado de la sesión — CU-24
-  const { data } = await api.get(`/resultados/${s.id}`)
-  router.push(`/profesor/resultados/${data.resultado?.id}`)
+  // resultado_id viene ya en la respuesta de CU-23
+  if (s.resultado_id) {
+    router.push(`/profesor/resultados/${s.resultado_id}`)
+  }
 }
 
 // ── Carga por tab ─────────────────────────────────────────────────────────────
