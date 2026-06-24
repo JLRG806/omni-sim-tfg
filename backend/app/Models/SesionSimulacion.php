@@ -23,6 +23,7 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property string               $tipo     real|prueba
  * @property \Carbon\Carbon       $inicio_at
  * @property \Carbon\Carbon|null  $finalizacion_at
+ * @property \Carbon\Carbon|null  $pausado_at
  * @property \Carbon\Carbon       $created_at
  * @property \Carbon\Carbon       $updated_at
  */
@@ -41,6 +42,7 @@ class SesionSimulacion extends Model
         'tipo',
         'inicio_at',
         'finalizacion_at',
+        'pausado_at',
     ];
 
     /**
@@ -51,6 +53,7 @@ class SesionSimulacion extends Model
         return [
             'inicio_at'       => 'datetime',
             'finalizacion_at' => 'datetime',
+            'pausado_at'      => 'datetime',
         ];
     }
 

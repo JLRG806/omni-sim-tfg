@@ -12,10 +12,9 @@ use Illuminate\Http\Request;
  * Actor: alumno
  * Route: PATCH /api/v1/sesiones/{id}/pausar  (auth:sanctum, role:alumno)
  *
- * Pausa una sesión en_curso. El tiempo sigue corriendo (no hay pausado_at).
- * El alumno puede retomar la sesión más tarde via CU-27.
+ * Pausa explícita: detiene el tiempo registrando pausado_at.
  * Si el alumno cierra el navegador sin pausar, la sesión queda en_curso
- * y también puede retomarse via CU-27.
+ * y el tiempo sigue corriendo hasta que reanude manualmente.
  */
 class pausarSimulacionController extends Controller
 {
@@ -38,7 +37,7 @@ class pausarSimulacionController extends Controller
             return response()->json(['message' => "No se puede pausar una sesión en estado '{$sesion->estado}'."], 422);
         }
 
-        $sesion->update(['estado' => 'pausada']);
+        $sesion->update(['estado' => 'pausada', 'pausado_at' => now()]);
 
         return response()->json([
             'message'   => 'Sesión pausada correctamente. Puedes retomar cuando quieras.',

@@ -41,7 +41,8 @@ class retomarSimulacionController extends Controller
         }
 
         if ($sesion->estado === 'pausada') {
-            $sesion->update(['estado' => 'en_curso']);
+            // Limpiar pausado_at al retomar (el tiempo vuelve a correr)
+            $sesion->update(['estado' => 'en_curso', 'pausado_at' => null]);
         }
 
         return response()->json([

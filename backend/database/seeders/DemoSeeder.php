@@ -275,6 +275,7 @@ class DemoSeeder extends Seeder
                 ['escenario_id' => $escPsi->id, 'alumno_id' => $ana->id],
                 [
                     'estado'          => 'finalizada',
+                    'tipo'            => 'real',
                     'inicio_at'       => now()->subHour(),
                     'finalizacion_at' => now()->subMinutes(5),
                 ]
@@ -320,6 +321,7 @@ class DemoSeeder extends Seeder
                 ['escenario_id' => $escPsi->id, 'alumno_id' => $carlos->id],
                 [
                     'estado'    => 'pausada',
+                    'tipo'      => 'real',
                     'inicio_at' => now()->subHours(2),
                 ]
             );
@@ -342,6 +344,7 @@ class DemoSeeder extends Seeder
                 ['escenario_id' => $escPsi->id, 'alumno_id' => $laura->id],
                 [
                     'estado'          => 'evaluada',
+                    'tipo'            => 'real',
                     'inicio_at'       => now()->subDays(2),
                     'finalizacion_at' => now()->subDays(2)->addHour(),
                 ]
