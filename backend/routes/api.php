@@ -116,6 +116,9 @@ Route::prefix('v1')->group(function () {
         // WF-15 Vista Asignatura Alumno (escenarios + sesiones del alumno)
         Route::get('/alumno/asignaturas/{id}', \App\Http\Controllers\vistaAsignaturaAlumnoController::class);
 
+        // WF-16 Cargar sesión activa (SimulacionChatView — cold load / refresh)
+        Route::get('/sesiones/{id}', \App\Http\Controllers\cargarSesionController::class);
+
         // CU-26 Iniciar Simulación
         Route::post('/sesiones', \App\Http\Controllers\iniciarSimulacionController::class);
 
