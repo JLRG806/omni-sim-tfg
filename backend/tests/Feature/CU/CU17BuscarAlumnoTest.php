@@ -37,10 +37,10 @@ class CU17BuscarAlumnoTest extends TestCase
             ->getJson("/api/v1/asignaturas/{$asig->id}/alumnos");
 
         $response->assertStatus(200)
-                 ->assertJsonCount(2, 'data');
+                 ->assertJsonCount(2, 'alumnos');
 
-        $ana = collect($response->json('data'))->firstWhere('name', 'Ana García');
-        $bea = collect($response->json('data'))->firstWhere('name', 'Bea López');
+        $ana = collect($response->json('alumnos'))->firstWhere('name', 'Ana García');
+        $bea = collect($response->json('alumnos'))->firstWhere('name', 'Bea López');
 
         $this->assertTrue($ana['matriculado']);
         $this->assertFalse($bea['matriculado']);
@@ -58,8 +58,8 @@ class CU17BuscarAlumnoTest extends TestCase
             ->getJson("/api/v1/asignaturas/{$asig->id}/alumnos?q=carlos");
 
         $response->assertStatus(200)
-                 ->assertJsonCount(1, 'data')
-                 ->assertJsonPath('data.0.name', 'Carlos Ruiz');
+                 ->assertJsonCount(1, 'alumnos')
+                 ->assertJsonPath('alumnos.0.name', 'Carlos Ruiz');
     }
 
     #[Test]
@@ -74,8 +74,8 @@ class CU17BuscarAlumnoTest extends TestCase
             ->getJson("/api/v1/asignaturas/{$asig->id}/alumnos");
 
         $response->assertStatus(200)
-                 ->assertJsonCount(1, 'data')
-                 ->assertJsonPath('data.0.name', 'Alumno Uno');
+                 ->assertJsonCount(1, 'alumnos')
+                 ->assertJsonPath('alumnos.0.name', 'Alumno Uno');
     }
 
     #[Test]

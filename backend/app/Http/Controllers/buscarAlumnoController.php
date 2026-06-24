@@ -36,7 +36,9 @@ class buscarAlumnoController extends Controller
 
         $q = $request->query('q', '');
 
-        $alumnosMatriculadosIds = $asignatura->matriculas()->pluck('alumno_id');
+        // Mapa alumno_id → matricula_id para facilitar desmatricular en frontend
+        $matriculas = $asignatura->matriculas()->get(['id', 'alumno_id']);
+        $matriculaMap = $matriculas->keyBy('alumno_id');
 
         $alumnos = User::where('rol', 'alumno')
             ->whereNull('deleted_at')
@@ -47,13 +49,15 @@ class buscarAlumnoController extends Controller
             ->orderBy('name')
             ->get(['id', 'name', 'email', 'estado'])
             ->map(fn ($a) => [
-                'id'          => $a->id,
-                'name'        => $a->name,
-                'email'       => $a->email,
-                'estado'      => $a->estado,
-                'matriculado' => $alumnosMatriculadosIds->contains($a->id),
+                'id'           => $a->id,
+                'name'         => $a->name,
+                'email'        => $a->email,
+                'estado'       => $a->estado,
+                'matriculado'  => $matriculaMap->has($a->id),
+                'matricula_id' => $matriculaMap->get($a->id)?->id,
+                'fecha_matricula' => $matriculaMap->get($a->id) ? $asignatura->matriculas()->where('alumno_id', $a->id)->value('fecha_matricula') : null,
             ]);
 
-        return response()->json(['data' => $alumnos]);
+        return response()->json(['alumnos' => $alumnos]);
     }
 }
