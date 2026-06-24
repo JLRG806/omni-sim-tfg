@@ -1,0 +1,55 @@
+  @startuml CU-31_PausarSimulacion
+  skinparam {
+      NoteBackgroundColor #whiteSmoke
+      ArrowColor #green
+      NoteBorderColor #black
+      linetype polyline
+  }
+
+  skinparam state {
+      BackgroundColor #whiteSmoke
+  }
+
+  hide empty description
+
+  state startState as "SIMULACION_EN_CURSO"
+  state endState as "VISTA_ASIGNATURA"
+
+  startState -down-> PausarSimulacion
+
+  state PausarSimulacion {
+      state SolicitudPausa as " "
+      state ValidarPropietario <<choice>>
+      state RegistrarPausa as " "
+
+      SolicitudPausa --> ValidarPropietario
+      note on link
+          <b>Alumno solicita</b>
+          * Pausar y salir de la simulación
+      end note
+
+      ValidarPropietario -[#red]-> [*]
+      note on link
+          <b>Sistema rechaza</b>
+          * Error: sin permisos
+      end note
+
+      ValidarPropietario --> RegistrarPausa
+      note on link
+          <b>Sistema registra</b>
+          * Sesión marcada como "Pausada"
+          * El tiempo transcurrido se detiene
+      end note
+  }
+
+  PausarSimulacion -down-> endState
+
+  note right of endState
+    El tiempo solo se detiene
+    con pausa explícita.
+    Si el alumno cierra la
+    pestaña, el tiempo sigue.
+    Puede retomar via CU-27
+  end note
+
+  @enduml
