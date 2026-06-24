@@ -267,11 +267,28 @@ $resultado->sesionSimulacion // ❌ NO EXISTE
 
 // FK columns no estándar
 Matricula::alumno_id       → users (rol=alumno)
-SesionSimulacion::alumno_id → users (rol=alumno)
+SesionSimulacion::alumno_id → users (rol=alumno o profesor en tipo=prueba)
 PerfilAgente::criterios()  → CriterioEvaluacion (FK: perfil_agente_id)
 Escenario::objetivos()     → orderBy('orden')
 Escenario::sesiones()      → SesionSimulacion
 SesionSimulacion::mensajes() → orderBy('orden')
+```
+
+### Reglas de aislamiento — OBLIGATORIAS en controllers de alumno
+```php
+// 1. Verificar que la sesión pertenece al alumno autenticado
+if ($sesion->alumno_id !== $request->user()->id) return 403;
+
+// 2. Filtrar siempre por tipo=real (sesiones de prueba del profesor son invisibles para el alumno)
+SesionSimulacion::where('tipo', 'real')->...
+
+// 3. En CU-21 despublicar y CU-23 historial: filtrar tipo=real
+```
+
+### Campo tipo en SesionSimulacion
+```
+tipo = 'real'   → sesión de alumno evaluable, aparece en historial, bloquea despublicar
+tipo = 'prueba' → sesión del profesor (CU-32), sin evaluación, oculta para alumnos, no bloquea
 ```
 
 ---
