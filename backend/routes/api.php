@@ -32,6 +32,16 @@ Route::prefix('v1')->group(function () {
         Route::post('/auth/logout', \App\Http\Controllers\logoutController::class);
     });
 
+    // ── Compartido (cualquier usuario autenticado) ─────────────────────────────
+    Route::middleware('auth:sanctum')->group(function () {
+        // Competencias — usadas por profesor (EmitirCalificacion) y alumno (ResultadosView)
+        Route::get('/competencias', function () {
+            return response()->json([
+                'data' => \App\Models\Competencia::orderBy('nombre')->get(['id', 'nombre', 'descripcion', 'tipo']),
+            ]);
+        });
+    });
+
     // ── Admin ─────────────────────────────────────────────────────────────────
     Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
 
@@ -75,13 +85,6 @@ Route::prefix('v1')->group(function () {
 
         // CU-16 Desmatricular Alumno
         Route::delete('/matriculas/{id}', \App\Http\Controllers\desmatricularAlumnoController::class);
-
-        // Competencias disponibles para criterios de evaluación
-        Route::get('/competencias', function () {
-            return response()->json([
-                'data' => \App\Models\Competencia::orderBy('nombre')->get(['id', 'nombre', 'descripcion', 'tipo']),
-            ]);
-        });
 
         // CU-18 Crear Escenario (dos fases)
         Route::post('/escenarios',              [\App\Http\Controllers\crearEscenarioController::class, 'fase1']);

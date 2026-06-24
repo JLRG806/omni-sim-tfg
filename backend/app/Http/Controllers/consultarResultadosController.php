@@ -31,7 +31,12 @@ class consultarResultadosController extends Controller
      */
     public function __invoke(Request $request, int $sesionId): JsonResponse
     {
-        $sesion = SesionSimulacion::with(['escenario:id,titulo,area_conocimiento'])->findOrFail($sesionId);
+        $sesion = SesionSimulacion::with([
+            'escenario:id,titulo,area_conocimiento,asignatura_id',
+            'escenario.asignatura:id,nombre,codigo',
+            'escenario.perfilAgente:id,escenario_id,nivel_dificultad',
+            'mensajes',
+        ])->findOrFail($sesionId);
 
         if ($sesion->alumno_id !== $request->user()->id) {
             return response()->json(['message' => 'No tienes permisos para ver los resultados de esta sesión.'], 403);
@@ -56,13 +61,21 @@ class consultarResultadosController extends Controller
             ]);
         }
 
-        // Resultado evaluado y publicado — devolver calificación completa
+        // Resultado evaluado y publicado — devolver calificación completa con metadatos
         return response()->json([
-            'sesion_id' => $sesionId,
-            'estado'    => 'evaluado',
+            'sesion_id'       => $sesionId,
+            'estado'          => 'evaluado',
+            'finalizacion_at' => $sesion->finalizacion_at?->toISOString(),
+            'num_mensajes'    => $sesion->mensajes->count(),
             'escenario' => [
-                'id'     => $sesion->escenario->id,
-                'titulo' => $sesion->escenario->titulo,
+                'id'               => $sesion->escenario->id,
+                'titulo'           => $sesion->escenario->titulo,
+                'area_conocimiento' => $sesion->escenario->area_conocimiento,
+                'nivel_dificultad' => $sesion->escenario->perfilAgente?->nivel_dificultad,
+                'asignatura'       => [
+                    'nombre' => $sesion->escenario->asignatura?->nombre,
+                    'codigo' => $sesion->escenario->asignatura?->codigo,
+                ],
             ],
             'resultado' => [
                 'final_calificacion'  => $resultado->final_calificacion,
@@ -71,6 +84,12 @@ class consultarResultadosController extends Controller
                 'mapa_descubrimiento' => $resultado->borrador_mapa_descubrimiento,
                 'publicado_at'        => $resultado->publicado_at->toISOString(),
             ],
+            'mensajes' => $sesion->mensajes->map(fn ($m) => [
+                'id'       => $m->id,
+                'emisor'   => $m->emisor,
+                'contenido' => $m->contenido,
+                'orden'    => $m->orden,
+            ])->values(),
         ]);
     }
 }
