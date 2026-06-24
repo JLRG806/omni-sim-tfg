@@ -42,6 +42,7 @@ class revisarHistorialController extends Controller
 
         $sesiones = SesionSimulacion::with(['alumno:id,name,email', 'mensajes'])
             ->where('escenario_id', $escenarioId)
+            ->where('tipo', 'real')
             ->orderByDesc('inicio_at')
             ->get();
 

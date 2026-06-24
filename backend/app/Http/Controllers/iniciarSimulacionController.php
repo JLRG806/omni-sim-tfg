@@ -39,15 +39,16 @@ class iniciarSimulacionController extends Controller
             return response()->json(['message' => 'No estás matriculado en la asignatura de este escenario.'], 403);
         }
 
-        // No permitir iniciar si ya hay una sesión en curso o pausada
+        // No permitir iniciar si ya hay una sesión real en curso o pausada
         $sesionActiva = SesionSimulacion::where('escenario_id', $escenario->id)
             ->where('alumno_id', $alumno->id)
+            ->where('tipo', 'real')
             ->whereIn('estado', ['en_curso', 'pausada'])
             ->first();
 
         if ($sesionActiva) {
             return response()->json([
-                'message'  => 'Ya tienes una sesión activa en este escenario. Usa Retomar.',
+                'message'   => 'Ya tienes una sesión activa en este escenario. Usa Retomar.',
                 'sesion_id' => $sesionActiva->id,
             ], 409);
         }
@@ -56,6 +57,7 @@ class iniciarSimulacionController extends Controller
             'escenario_id' => $escenario->id,
             'alumno_id'    => $alumno->id,
             'estado'       => 'en_curso',
+            'tipo'         => 'real',
             'inicio_at'    => now(),
         ]);
 

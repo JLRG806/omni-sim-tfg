@@ -37,7 +37,9 @@ class despublicarEscenarioController extends Controller
             return response()->json(['message' => 'El escenario ya está en borrador.'], 422);
         }
 
+        // Solo las sesiones reales bloquean el despublicado — las de prueba no
         $sesionesActivas = $escenario->sesiones()
+            ->where('tipo', 'real')
             ->whereIn('estado', ['en_curso', 'pausada'])
             ->count();
 
