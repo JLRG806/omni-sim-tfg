@@ -1,0 +1,8 @@
+# Screenshots de verificación Playwright (generados automáticamente)
+docs/screenshots/
+
+# Archivos temporales de verificación
+/tmp/verify-*.js
+
+# Dependencias Node de tests E2E
+tests/e2e/node_modules/
