@@ -6,3 +6,6 @@ docs/screenshots/
 
 # Dependencias Node de tests E2E
 tests/e2e/node_modules/
+
+# API key de n8n (nunca commitear)
+.n8n-api-key

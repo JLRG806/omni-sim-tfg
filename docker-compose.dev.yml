@@ -18,6 +18,7 @@ services:
       DB_PASSWORD: omnisim_secret
       QUEUE_CONNECTION: database
       SANCTUM_STATEFUL_DOMAINS: localhost,localhost:8081,localhost:5173
+      N8N_URL: "http://100.108.45.35:5678"
     depends_on:
       postgres:
         condition: service_healthy
@@ -81,29 +82,15 @@ services:
       DB_USERNAME: omnisim
       DB_PASSWORD: omnisim_secret
       QUEUE_CONNECTION: database
+      N8N_URL: "http://100.108.45.35:5678"
     depends_on:
       postgres:
         condition: service_healthy
     networks:
       - omnisim
 
-  n8n:
-    image: n8nio/n8n:latest
-    ports:
-      - "5678:5678"
-    environment:
-      N8N_HOST: "0.0.0.0"
-      N8N_PORT: "5678"
-      N8N_PROTOCOL: "http"
-      WEBHOOK_URL: "http://localhost:5678"
-      GENERIC_TIMEZONE: "Europe/Madrid"
-      N8N_BASIC_AUTH_ACTIVE: "true"
-      N8N_BASIC_AUTH_USER: "admin"
-      N8N_BASIC_AUTH_PASSWORD: "omnisim_n8n"
-    volumes:
-      - n8n_data:/home/node/.n8n
-    networks:
-      - omnisim
+  # n8n eliminado — corre en vertexlab (ver docker/docker-compose.n8n.yml)
+  # Desplegar: docker --context vertexlab compose -f docker/docker-compose.n8n.yml up -d
 
 networks:
   omnisim:
@@ -111,4 +98,3 @@ networks:
 
 volumes:
   postgres_data:
-  n8n_data:

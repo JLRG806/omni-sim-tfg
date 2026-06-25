@@ -1,0 +1,35 @@
+# n8n para vertexlab — Orquestador IA de OmniSim
+#
+# Despliegue desde el laptop (Docker context):
+#   docker context create vertexlab --docker "host=ssh://joselu@100.108.45.35"
+#   docker --context vertexlab compose -f docker/docker-compose.n8n.yml up -d
+#
+# Subir/actualizar workflows:
+#   ./scripts/n8n-sync.sh
+
+services:
+  n8n:
+    image: n8nio/n8n:latest
+    ports:
+      - "5678:5678"
+    environment:
+      - N8N_HOST=0.0.0.0
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=http
+      # WEBHOOK_URL debe ser la IP Tailscale de vertexlab
+      # para que el backend (en el laptop) pueda llamar a los webhooks
+      - WEBHOOK_URL=http://100.108.45.35:5678
+      - GENERIC_TIMEZONE=Europe/Madrid
+      - N8N_BASIC_AUTH_ACTIVE=true
+      - N8N_BASIC_AUTH_USER=admin
+      - N8N_BASIC_AUTH_PASSWORD=omnisim_n8n
+    extra_hosts:
+      # Permite que n8n alcance Ollama nativo en el host del servidor
+      # En workflows usar: http://host.docker.internal:11434
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - n8n_data:/home/node/.n8n
+    restart: unless-stopped
+
+volumes:
+  n8n_data:

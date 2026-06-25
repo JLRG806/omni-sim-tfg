@@ -35,4 +35,11 @@ return [
         ],
     ],
 
+    // ── IA Orchestrator ───────────────────────────────────────────────────────
+
+    'n8n' => [
+        // URL del servidor n8n — en dev: vertexlab via Tailscale
+        'url' => env('N8N_URL', 'http://n8n:5678'),
+    ],
+
 ];
