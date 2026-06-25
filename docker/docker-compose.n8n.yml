@@ -23,6 +23,8 @@ services:
       - N8N_BASIC_AUTH_ACTIVE=true
       - N8N_BASIC_AUTH_USER=admin
       - N8N_BASIC_AUTH_PASSWORD=omnisim_n8n
+      # Necesario cuando se accede via HTTP (sin TLS) — ej. via Tailscale IP
+      - N8N_SECURE_COOKIE=false
     extra_hosts:
       # Permite que n8n alcance Ollama nativo en el host del servidor
       # En workflows usar: http://host.docker.internal:11434
